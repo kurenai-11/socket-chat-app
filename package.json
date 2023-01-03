@@ -1,0 +1,23 @@
+{
+  "name": "simple-fullstack-scaffold",
+  "version": "0.0.0",
+  "description": "A simple fullstack scaffold.",
+  "scripts": {
+    "dev": "concurrently --kill-others npm:dev-backend npm:dev-frontend",
+    "install-deps": "npm run deps-backend && npm run deps-frontend",
+    "deps-backend": "npm --prefix backend/ install",
+    "deps-frontend": "npm --prefix frontend/ install",
+    "dev-backend": "npm --prefix backend/ run dev",
+    "dev-frontend": "npm --prefix frontend/ run dev",
+    "build-backend": "npm --prefix backend/ run build",
+    "start-backend": "npm --prefix backend/ run start",
+    "start-frontend": "npm --prefix frontend/ run start",
+    "start": "npm run install-deps && npm run build-backend && (concurrently npm:start-backend npm:start-frontend)"
+  },
+  "keywords": [],
+  "author": "kurenai-11",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
