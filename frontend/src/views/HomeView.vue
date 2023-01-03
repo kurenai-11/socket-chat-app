@@ -21,7 +21,7 @@ const messages = ref<Message[]>([]);
 const disconnect = () => {
   socket.value.connected && socket.value.disconnect();
 };
-const reconnect = () => {
+const connect = () => {
   socket.value.disconnected && socket.value.connect();
 };
 
@@ -45,7 +45,7 @@ onMounted(() => {
       Currently you are {{ isConnected ? "connected" : "disconnected" }}
       {{ isConnected ? "to" : "from" }} the chat.
     </p>
-    <button @click="reconnect">Connect</button>
+    <button @click="connect">Connect</button>
     <div v-if="isConnected" class="flex flex-col items-center gap-2">
       <button @click="disconnect">Disconnect</button>
       <div>
