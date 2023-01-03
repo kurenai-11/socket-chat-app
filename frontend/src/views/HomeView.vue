@@ -42,10 +42,10 @@ const sendMessage = () => {
 
 // methods to connect or disconnect from the socket
 const disconnect = () => {
-  socket.value.connected && socket.value.disconnect();
+  isConnected.value && socket.value.disconnect();
 };
 const connect = () => {
-  socket.value.disconnected && socket.value.connect();
+  !isConnected.value && socket.value.connect();
 };
 
 // watching connection state
