@@ -32,6 +32,18 @@ io.on("connection", (socket) => {
     content: `A user ${socket.id} connected to the chat...`,
     date: new Date(),
   });
+  // receiving sent message from the socket
+  socket.on("send message", (message) => {
+    console.log("message :>> ", message);
+    // broadcasting the message
+    io.emit("message sent", {
+      type: "userMessage",
+      id: nanoid(),
+      content: message.content,
+      date: new Date(),
+      author: message.author,
+    });
+  });
   socket.on("disconnect", () => {
     console.log(`A user ${socket.id} disconnected...`);
     io.emit("user disconnected", {
