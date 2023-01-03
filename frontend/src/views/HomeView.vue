@@ -3,23 +3,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import io from "socket.io-client";
 import { formatDistanceToNow } from "date-fns";
 import { twMerge as tw } from "tailwind-merge";
-
-type UserMessage = {
-  type: "userMessage";
-  id: string;
-  content: string;
-  author: string;
-  date: string;
-};
-
-type ServerMessage = {
-  type: "serverMessage";
-  id: string;
-  content: string;
-  date: string;
-};
-
-type Message = UserMessage | ServerMessage;
+import type { Message } from "../utils/types";
 
 // creating a socket connection
 // I use 192.168.1.200 which is my local lan IP
