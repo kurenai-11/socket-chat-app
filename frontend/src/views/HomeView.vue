@@ -78,14 +78,14 @@ onMounted(() => {
     <button @click="connect">Connect</button>
     <div v-if="isConnected" class="flex flex-col items-center gap-2">
       <button @click="disconnect">Disconnect</button>
-      <div>
+      <form @submit.prevent="sendMessage">
         <input
           v-model="currentMessage"
           type="text"
           placeholder="your message..."
         />
-        <button @click="sendMessage">Submit</button>
-      </div>
+        <button>Submit</button>
+      </form>
       <div
         :key="message.id"
         v-for="message of messages"
