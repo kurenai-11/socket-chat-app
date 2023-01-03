@@ -40,7 +40,7 @@ const sendMessage = () => {
   currentMessage.value = "";
 };
 
-// methods to coonect or disconnect from the socket
+// methods to connect or disconnect from the socket
 const disconnect = () => {
   socket.value.connected && socket.value.disconnect();
 };
