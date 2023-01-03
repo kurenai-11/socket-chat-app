@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
+import { nanoid } from "nanoid";
 
 // initializing express and the socket http server
 const app = express();
@@ -25,11 +26,20 @@ app.get("/", (req, res) => {
 // socket related
 io.on("connection", (socket) => {
   console.log(`A user ${socket.id} connected.`);
-  socket.emit("connected", {
-    serverMessage: `A user ${socket.id} connected to the chat.`,
+  io.emit("user connected", {
+    type: "serverMessage",
+    id: nanoid(),
+    content: `A user ${socket.id} connected to the chat...`,
+    date: new Date(),
   });
   socket.on("disconnect", () => {
     console.log(`A user ${socket.id} disconnected...`);
+    io.emit("user disconnected", {
+      type: "serverMessage",
+      id: nanoid(),
+      content: `A user ${socket.id} disconnected from the chat...`,
+      date: new Date(),
+    });
   });
 });
 

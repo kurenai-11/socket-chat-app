@@ -1,13 +1,25 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import io from "socket.io-client";
+import { formatDistanceToNow } from "date-fns";
+import { twMerge as tw } from "tailwind-merge";
 
-type Message = {
+type UserMessage = {
+  type: "userMessage";
   id: string;
   content: string;
   author: string;
   date: string;
 };
+
+type ServerMessage = {
+  type: "serverMessage";
+  id: string;
+  content: string;
+  date: string;
+};
+
+type Message = UserMessage | ServerMessage;
 
 // creating a socket connection
 // I use 192.168.1.200 which is my local lan IP
@@ -16,6 +28,9 @@ const socket = ref(io("http://192.168.1.200:5000", { autoConnect: false }));
 const isConnected = computed(() => socket.value.connected);
 
 const messages = ref<Message[]>([]);
+const addMessage = (message: Message) => {
+  messages.value.unshift(message);
+};
 
 // methods to coonect or disconnect from the socket
 const disconnect = () => {
@@ -32,9 +47,16 @@ watch(isConnected, () => {
 // connecting on mount and setting up the events
 onMounted(() => {
   socket.value.connect();
-  socket.value.on("connected", (message) => {
-    console.log("message :>> ", message);
-  });
+  const addMessageEvents = [
+    "user connected",
+    "user disconnected",
+    "message received",
+  ] as const;
+  for (const messageEvent of addMessageEvents) {
+    socket.value.on(messageEvent, (message: Message) => {
+      addMessage(message);
+    });
+  }
 });
 </script>
 
@@ -52,8 +74,20 @@ onMounted(() => {
         <input type="text" placeholder="your message..." />
         <button>Submit</button>
       </div>
-      <div :key="message.date" v-for="message of messages">
+      <div
+        :key="message.id"
+        v-for="message of messages"
+        :class="
+          tw(
+            'text-zinc-3',
+            message.type === 'serverMessage' && 'text-amber-3 font-bold'
+          )
+        "
+      >
         {{ message.content }}
+        <span class="text-zinc-4 font-normal">{{
+          formatDistanceToNow(new Date(message.date), { addSuffix: true })
+        }}</span>
       </div>
     </div>
   </main>
