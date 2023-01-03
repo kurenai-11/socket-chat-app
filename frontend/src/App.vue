@@ -7,11 +7,11 @@ const navLinkClasses =
 
 <template>
   <header>
-    <nav class="flex gap-2 py-2 px-1 justify-center">
+    <nav class="flex gap-2 py-2 px-1 justify-center font-sans">
       <RouterLink :class="navLinkClasses" to="/">Home</RouterLink>
       <RouterLink :class="navLinkClasses" to="/about">About</RouterLink>
     </nav>
   </header>
 
-  <RouterView />
+  <RouterView class="font-sans" />
 </template>
