@@ -28,7 +28,7 @@ const socket = ref(io("http://192.168.1.200:5000", { autoConnect: false }));
 const isConnected = computed(() => socket.value.connected);
 
 const messages = ref<Message[]>([]);
-const currentMessage = ref<string>("");
+const currentMessage = ref("");
 const addReceivedMessage = (message: Message) => {
   messages.value.unshift(message);
 };
