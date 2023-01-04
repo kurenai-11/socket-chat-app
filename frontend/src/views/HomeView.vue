@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
-import io from "socket.io-client";
-import type { Message } from "../utils/types";
+import io, { Socket } from "socket.io-client";
+import type {
+  Message,
+  ServerToClientEvents,
+  ClientToServerEvents,
+} from "../utils/types";
 import ChatMessage from "@/components/ChatMessage.vue";
 import FormInput from "@/components/FormInput.vue";
 import NButton from "@/components/NButton.vue";
@@ -9,7 +13,11 @@ import NButton from "@/components/NButton.vue";
 // creating a socket connection
 // I use 192.168.1.200 which is my local lan IP
 // you can replace it with http://localhost:5000 or whatever your local ip of the backend is
-const socket = ref(io("http://192.168.1.200:5000", { autoConnect: false }));
+const rawSocket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+  "http://192.168.1.200:5000",
+  { autoConnect: false }
+);
+const socket = ref(rawSocket);
 const isConnected = computed(() => socket.value.connected);
 
 const messages = ref<Message[]>([]);
@@ -49,7 +57,7 @@ onMounted(() => {
     "message sent",
   ] as const;
   for (const messageEvent of addMessageEvents) {
-    socket.value.on(messageEvent, (message: Message) => {
+    socket.value.on(messageEvent, (message) => {
       addReceivedMessage(message);
     });
   }

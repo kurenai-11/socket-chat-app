@@ -14,3 +14,14 @@ export type ServerMessage = {
 };
 
 export type Message = UserMessage | ServerMessage;
+
+// socket types
+export interface ServerToClientEvents {
+  "user connected": (message: Message) => void;
+  "user disconnected": (message: Message) => void;
+  "message sent": (message: Message) => void;
+}
+
+export interface ClientToServerEvents {
+  "send message": (message: Partial<Message>) => void;
+}
