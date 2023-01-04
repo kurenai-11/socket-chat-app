@@ -18,6 +18,9 @@ const addReceivedMessage = (message: Message) => {
   messages.value.unshift(message);
 };
 const sendMessage = () => {
+  if (currentMessage.value.length === 0) {
+    return;
+  }
   socket.value.emit("send message", {
     content: currentMessage.value,
     author: "anonymous",
