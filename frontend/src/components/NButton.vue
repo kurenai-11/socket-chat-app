@@ -1,3 +1,4 @@
+<!-- Means Normal Button -->
 <script setup lang="ts">
 import { twMerge as tw } from "tailwind-merge";
 import type { ButtonHTMLAttributes } from "vue";

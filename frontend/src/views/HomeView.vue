@@ -4,7 +4,7 @@ import io from "socket.io-client";
 import type { Message } from "../utils/types";
 import ChatMessage from "@/components/ChatMessage.vue";
 import FormInput from "@/components/FormInput.vue";
-import BaseButton from "@/components/BaseButton.vue";
+import NButton from "@/components/NButton.vue";
 
 // creating a socket connection
 // I use 192.168.1.200 which is my local lan IP
@@ -60,12 +60,12 @@ onMounted(() => {
       Currently you are {{ isConnected ? "connected" : "disconnected" }}
       {{ isConnected ? "to" : "from" }} the chat.
     </p>
-    <BaseButton v-if="!isConnected" @click="connect">Connect</BaseButton>
+    <NButton v-if="!isConnected" @click="connect">Connect</NButton>
     <div v-if="isConnected" class="flex flex-col items-center gap-2">
-      <BaseButton @click="disconnect">Disconnect</BaseButton>
+      <NButton @click="disconnect">Disconnect</NButton>
       <form @submit.prevent="sendMessage" class="flex gap-2">
         <FormInput placeholder="Your message..." v-model="currentMessage" />
-        <BaseButton type="submit">Submit</BaseButton>
+        <NButton type="submit">Submit</NButton>
       </form>
       <div class="flex flex-col gap-2">
         <ChatMessage
