@@ -60,9 +60,9 @@ onMounted(() => {
       Currently you are {{ isConnected ? "connected" : "disconnected" }}
       {{ isConnected ? "to" : "from" }} the chat.
     </p>
-    <BaseButton v-if="!isConnected" @clicked="connect">Connect</BaseButton>
+    <BaseButton v-if="!isConnected" @click="connect">Connect</BaseButton>
     <div v-if="isConnected" class="flex flex-col items-center gap-2">
-      <BaseButton @clicked="disconnect">Disconnect</BaseButton>
+      <BaseButton @click="disconnect">Disconnect</BaseButton>
       <form @submit.prevent="sendMessage" class="flex gap-2">
         <FormInput placeholder="Your message..." v-model="currentMessage" />
         <BaseButton type="submit">Submit</BaseButton>
