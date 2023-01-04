@@ -23,5 +23,5 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  "send message": (message: Partial<Message>) => void;
+  "send message": (message: Partial<UserMessage>) => void;
 }

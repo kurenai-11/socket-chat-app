@@ -3,11 +3,12 @@ import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
 import { nanoid } from "nanoid";
+import { ClientToServerEvents, ServerToClientEvents } from "./types.js";
 
 // initializing express and the socket http server
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
@@ -30,18 +31,21 @@ io.on("connection", (socket) => {
     type: "serverMessage",
     id: nanoid(),
     content: `A user ${socket.id} connected to the chat...`,
-    date: new Date(),
+    date: new Date().toISOString(),
   });
   // receiving sent message from the socket
   socket.on("send message", (message) => {
     console.log("message :>> ", message);
+    if (message.content === undefined) {
+      return;
+    }
     // broadcasting the message
     io.emit("message sent", {
       type: "userMessage",
       id: nanoid(),
       content: message.content,
-      date: new Date(),
-      author: message.author,
+      date: new Date().toISOString(),
+      author: message.author || "anonymous",
     });
   });
   socket.on("disconnect", () => {
@@ -50,7 +54,7 @@ io.on("connection", (socket) => {
       type: "serverMessage",
       id: nanoid(),
       content: `A user ${socket.id} disconnected from the chat...`,
-      date: new Date(),
+      date: new Date().toISOString(),
     });
   });
 });
