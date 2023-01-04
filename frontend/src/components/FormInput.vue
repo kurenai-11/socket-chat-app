@@ -17,8 +17,11 @@ defineEmits<{ (e: "update:modelValue", val: string): void }>();
 </script>
 <template>
   <input
-    v-bind="{ ...props, class: tw(baseClasses, props.additionalClasses) }"
-    :value="props.modelValue"
+    v-bind="{
+      ...props,
+      class: tw(baseClasses, props.additionalClasses),
+      value: props.modelValue,
+    }"
     @change="
       $emit('update:modelValue', ($event.target as HTMLInputElement).value)
     "
