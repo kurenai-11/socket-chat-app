@@ -17,6 +17,7 @@ const rawSocket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   "http://192.168.1.200:5000",
   { autoConnect: false }
 );
+// for reactivity purposes
 const socket = ref(rawSocket);
 const isConnected = computed(() => socket.value.connected);
 
