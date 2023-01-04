@@ -1,0 +1,28 @@
+<!-- This is a generic FormInput element -->
+<script setup lang="ts">
+import { twMerge as tw } from "tailwind-merge";
+import type { InputHTMLAttributes } from "vue";
+
+// workaround for https://github.com/vuejs/core/issues/4294
+export interface CustomInputProps extends InputHTMLAttributes {
+  additionalClasses?: string;
+  modelValue?: string;
+}
+
+const baseClasses =
+  "outline-none border-none bg-zinc-9 color-inherit transition-all rounded-lg text-lg py-1 px-3 focus:outline-amber-3";
+
+const props = defineProps<CustomInputProps>();
+defineEmits<{ (e: "update:modelValue", val: string): void }>();
+</script>
+<template>
+  <input
+    :type="props.type"
+    :placeholder="props.placeholder"
+    :class="tw(baseClasses, props.additionalClasses)"
+    :value="props.modelValue"
+    @change="
+      $emit('update:modelValue', ($event.target as HTMLInputElement).value)
+    "
+  />
+</template>
