@@ -32,7 +32,6 @@ const sendMessage = () => {
   }
   socket.value.emit("send message", {
     content: currentMessage.value,
-    author: "anonymous",
   });
   currentMessage.value = "";
 };
