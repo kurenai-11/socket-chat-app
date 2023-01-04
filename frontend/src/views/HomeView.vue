@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import io from "socket.io-client";
-import { formatDistanceToNow } from "date-fns";
-import { twMerge as tw } from "tailwind-merge";
 import type { Message } from "../utils/types";
+import ChatMessage from "@/components/ChatMessage.vue";
 
 // creating a socket connection
 // I use 192.168.1.200 which is my local lan IP
@@ -70,24 +69,12 @@ onMounted(() => {
         />
         <button>Submit</button>
       </form>
-      <div
-        :key="message.id"
-        v-for="message of messages"
-        :class="
-          tw(
-            'text-zinc-3',
-            message.type === 'serverMessage' && 'text-amber-3 font-bold'
-          )
-        "
-      >
-        {{ message.content }}
-        <span class="text-pink-7" v-if="message.type === 'userMessage'"
-          >by <span class="text-red-7">{{ message.author }}</span></span
-        >
-        {{ " " }}
-        <span class="text-zinc-4 font-normal">{{
-          formatDistanceToNow(new Date(message.date), { addSuffix: true })
-        }}</span>
+      <div class="flex flex-col gap-2">
+        <ChatMessage
+          :key="message.id"
+          v-for="message of messages"
+          :message="message"
+        />
       </div>
     </div>
   </main>
