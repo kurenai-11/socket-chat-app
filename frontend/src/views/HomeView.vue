@@ -39,6 +39,8 @@ const sendMessage = () => {
 // methods to connect or disconnect from the socket
 const disconnect = () => {
   isConnected.value && socket.value.disconnect();
+  // clear local messages
+  messages.value = [];
 };
 const connect = () => {
   !isConnected.value && socket.value.connect();
