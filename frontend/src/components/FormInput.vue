@@ -12,15 +12,15 @@ export interface CustomInputProps extends InputHTMLAttributes {
 const baseClasses =
   "outline-none border-none bg-zinc-9 color-inherit transition-all rounded-lg text-lg py-1 px-3 focus:outline-amber-3";
 
-const props = defineProps<CustomInputProps>();
+defineProps<CustomInputProps>();
 defineEmits<{ (e: "update:modelValue", val: string): void }>();
 </script>
 <template>
   <input
     v-bind="{
-      ...props,
-      class: tw(baseClasses, props.additionalClasses),
-      value: props.modelValue,
+      ...$props,
+      class: tw(baseClasses, $props.additionalClasses),
+      value: $props.modelValue,
     }"
     @change="
       $emit('update:modelValue', ($event.target as HTMLInputElement).value)
