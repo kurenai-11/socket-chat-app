@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, onUpdated, ref, watch } from "vue";
 import io, { Socket } from "socket.io-client";
 import type {
   Message,
@@ -62,6 +62,11 @@ onMounted(() => {
     });
   }
 });
+onUpdated(() => {
+  // making a hardcoded limit to the number of messages
+  // only the recent messages will be shown
+  messages.value.length > 30 && messages.value.pop();
+});
 </script>
 
 <template>
@@ -89,7 +94,7 @@ onMounted(() => {
           >Submit</NButton
         >
       </form>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-2 mt-1 mb-4">
         <ChatMessage
           :key="message.id"
           v-for="message of messages"
