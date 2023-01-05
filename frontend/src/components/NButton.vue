@@ -10,7 +10,7 @@ export interface CustomButtonProps extends ButtonHTMLAttributes {
 defineProps<CustomButtonProps>();
 
 const baseClasses =
-  "bg-zinc-9 color-inherit text-lg py-1 px-3 border-none outline-none transition-all rounded-lg hover:(outline-amber-3)";
+  "bg-zinc-9 color-inherit cursor-pointer text-lg py-1 px-3 border-none outline-none transition-all rounded-lg hover:(outline-amber-3)";
 </script>
 <template>
   <button
