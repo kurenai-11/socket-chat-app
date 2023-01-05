@@ -76,13 +76,18 @@ onMounted(() => {
       <NButton @click="disconnect" additional-classes="mb-1"
         >Disconnect</NButton
       >
-      <form @submit.prevent="sendMessage" class="flex gap-2">
+      <form
+        @submit.prevent="sendMessage"
+        class="flex w-full flex-col gap-2 sm:(flex-row)"
+      >
         <FormInput
           placeholder="Your message..."
-          additional-classes="w-120"
+          additional-classes="sm:(min-w-120)"
           v-model="currentMessage"
         />
-        <NButton type="submit">Submit</NButton>
+        <NButton type="submit" additional-classes="w-fit self-center"
+          >Submit</NButton
+        >
       </form>
       <div class="flex flex-col gap-2">
         <ChatMessage
