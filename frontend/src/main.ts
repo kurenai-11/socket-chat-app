@@ -5,9 +5,9 @@ import App from "./App.vue";
 import router from "./router";
 
 import { OhVueIcon, addIcons } from "oh-vue-icons";
-import { HiLogin, HiArrowLeft } from "oh-vue-icons/icons";
+import { MdLogin, HiArrowLeft } from "oh-vue-icons/icons";
 
-addIcons(HiLogin, HiArrowLeft);
+addIcons(MdLogin, HiArrowLeft);
 
 import "reset.css";
 import "virtual:uno.css";
