@@ -3,7 +3,6 @@
 import { twMerge as tw } from "tailwind-merge";
 import type { InputHTMLAttributes } from "vue";
 
-// workaround for https://github.com/vuejs/core/issues/4294
 export interface CustomInputProps extends InputHTMLAttributes {
   additionalClasses?: string;
   modelValue?: string;
