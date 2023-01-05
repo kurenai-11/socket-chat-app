@@ -1,5 +1,9 @@
 <template>
-  <main>
-    <h1 class="text-xl font-bold">This is an about page.</h1>
+  <main class="flex flex-col items-center gap-2">
+    <h1 class="text-xl font-bold text-zinc-4">
+      This is a socket chat application made in Vue, using socket.io for real
+      time communication.
+    </h1>
+    <h2 class="text-lg text-zinc-3"></h2>
   </main>
 </template>

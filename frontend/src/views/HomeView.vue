@@ -73,9 +73,15 @@ onMounted(() => {
     </p>
     <NButton v-if="!isConnected" @click="connect">Connect</NButton>
     <div v-if="isConnected" class="flex flex-col items-center gap-2">
-      <NButton @click="disconnect">Disconnect</NButton>
+      <NButton @click="disconnect" additional-classes="mb-1"
+        >Disconnect</NButton
+      >
       <form @submit.prevent="sendMessage" class="flex gap-2">
-        <FormInput placeholder="Your message..." v-model="currentMessage" />
+        <FormInput
+          placeholder="Your message..."
+          additional-classes="w-120"
+          v-model="currentMessage"
+        />
         <NButton type="submit">Submit</NButton>
       </form>
       <div class="flex flex-col gap-2">
