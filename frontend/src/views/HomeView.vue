@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUpdated, ref, watch } from "vue";
+import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from "vue";
 import io, { Socket } from "socket.io-client";
 import type {
   Message,
@@ -66,6 +66,11 @@ onUpdated(() => {
   // making a hardcoded limit to the number of messages
   // only the recent messages will be shown
   messages.value.length > 30 && messages.value.pop();
+});
+onUnmounted(() => {
+  // socket should disconnect itself automatically
+  // but just in case let's disconnect it manually as well
+  socket.value.disconnect();
 });
 </script>
 
