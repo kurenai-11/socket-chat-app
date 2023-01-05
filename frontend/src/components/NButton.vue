@@ -9,7 +9,7 @@ export interface CustomButtonProps extends ButtonHTMLAttributes {
   icon?: string;
   // UnoCSS(tailwind) classes ↓
   iconSize?: string;
-  additionIconClasses?: string;
+  additionalIconClasses?: string;
 }
 
 // withDefaults doesn't work with imported interfaces as of now
@@ -32,7 +32,7 @@ const baseClasses =
   >
     <div
       v-if="icon"
-      :class="tw(icon, iconSize ? iconSize : 'w-6 h-6', additionIconClasses)"
+      :class="tw(icon, iconSize ? iconSize : 'w-6 h-6', additionalIconClasses)"
     />
     <slot />
   </button>
