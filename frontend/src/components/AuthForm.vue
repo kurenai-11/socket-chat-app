@@ -18,7 +18,9 @@ import NButton from "./NButton.vue";
         ><v-icon name="hi-login" /> Login</NButton
       >
     </form>
-    <NButton additional-classes="w-fit self-center"
+    <NButton
+      @click="$emit('change-form')"
+      additional-classes="w-fit self-center"
       ><v-icon name="hi-arrow-left" /> Signup?</NButton
     >
   </div>
