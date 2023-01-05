@@ -5,6 +5,21 @@ import NButton from "./NButton.vue";
 
 // if not, then it is a sign up form
 const isLoginForm = ref(true);
+
+const login = ref("");
+const password = ref("");
+const confirmPassword = ref<string | undefined>(undefined);
+
+const switchFormsHandler = () => {
+  login.value = "";
+  password.value = "";
+  confirmPassword.value = "";
+  isLoginForm.value = !isLoginForm.value;
+};
+const submitHandler = (action: "login" | "signup") => {
+  console.log(`submit ${action}`);
+  // to implement authentication
+};
 </script>
 <template>
   <div class="flex flex-col items-center w-84 gap-2">
@@ -12,32 +27,33 @@ const isLoginForm = ref(true);
       {{ isLoginForm ? "Login" : "Signup" }}
     </h1>
     <form
-      @submit.prevent=""
+      @submit.prevent="submitHandler(isLoginForm ? 'login' : 'signup')"
       class="flex flex-col w-full gap-2 justify-center items-center"
     >
       <FormInput
         additional-classes="w-full"
-        :placeholder="isLoginForm ? 'Login' : 'Signup'"
+        placeholder="Login"
+        v-model="login"
       />
       <FormInput
         additional-classes="w-full"
         type="password"
         placeholder="Password"
+        v-model="password"
       />
       <FormInput
         v-if="!isLoginForm"
         additional-classes="w-full"
         type="password"
         placeholder="Confirm password"
+        v-model="confirmPassword"
       />
       <NButton additional-classes="w-32 self-center"
         ><v-icon name="md-login" />
         {{ isLoginForm ? "Login" : "Signup" }}</NButton
       >
     </form>
-    <NButton
-      @click="isLoginForm = !isLoginForm"
-      additional-classes="w-32 self-center"
+    <NButton @click="switchFormsHandler" additional-classes="w-32 self-center"
       ><v-icon name="hi-arrow-left" />
       {{ isLoginForm ? "Signup?" : "Login?" }}</NButton
     >
