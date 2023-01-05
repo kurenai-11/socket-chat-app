@@ -9,17 +9,17 @@ defineProps<{ message: Message }>();
     :class="
       tw(
         'text-zinc-3 text-center',
-        message.type === 'serverMessage' && 'text-amber-3 font-bold'
+        $props.message.type === 'serverMessage' && 'text-amber-3 font-bold'
       )
     "
   >
-    {{ message.content }}
-    <span class="text-pink-7" v-if="message.type === 'userMessage'"
-      >by <span class="text-red-7">{{ message.author }}</span></span
+    {{ $props.message.content }}
+    <span class="text-pink-7" v-if="$props.message.type === 'userMessage'"
+      >by <span class="text-red-7">{{ $props.message.author }}</span></span
     >
     {{ " " }}
     <span class="text-zinc-4 font-normal">{{
-      formatDistanceToNow(new Date(message.date), { addSuffix: true })
+      formatDistanceToNow(new Date($props.message.date), { addSuffix: true })
     }}</span>
   </div>
 </template>
