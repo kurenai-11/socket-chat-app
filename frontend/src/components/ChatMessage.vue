@@ -18,12 +18,10 @@ const getTimeAgo = () => {
 const timeAgo = ref(getTimeAgo());
 onMounted(() => {
   refreshIntervalId = setInterval(() => {
-    console.log("refresh interval");
     timeAgo.value = getTimeAgo();
   }, refreshInterval);
 });
 onUnmounted(() => {
-  console.log("clear interval");
   clearInterval(refreshIntervalId);
 });
 </script>
