@@ -76,9 +76,16 @@ onUpdated(() => {
       Currently you are {{ isConnected ? "connected" : "disconnected" }}
       {{ isConnected ? "to" : "from" }} the chat.
     </p>
-    <NButton v-if="!isConnected" @click="connect">Connect</NButton>
+    <NButton
+      v-if="!isConnected"
+      @click="connect"
+      additional-classes="font-bold bg-green-8 hover:outline-cyan-9"
+      >Connect</NButton
+    >
     <div v-if="isConnected" class="flex flex-col items-center gap-2">
-      <NButton @click="disconnect" additional-classes="mb-1"
+      <NButton
+        @click="disconnect"
+        additional-classes="mb-1 text-zinc-1 font-bold bg-[#78222b] hover:outline-orange-7"
         >Disconnect</NButton
       >
       <form
