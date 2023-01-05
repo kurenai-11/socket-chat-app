@@ -12,6 +12,8 @@ export interface CustomButtonProps extends ButtonHTMLAttributes {
   additionIconClasses?: string;
 }
 
+// withDefaults doesn't work with imported interfaces as of now
+// like the CustomButtonProps that uses imported ButtonHTMLAttributes above
 defineProps<CustomButtonProps>();
 
 const baseClasses =
