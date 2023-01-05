@@ -104,8 +104,13 @@ onUnmounted(() => {
           additional-classes="sm:(min-w-120)"
           v-model="currentMessage"
         />
-        <NButton type="submit" additional-classes="w-fit self-center"
-          >Submit</NButton
+        <NButton
+          type="submit"
+          additional-classes="w-fit self-center"
+          icon="i-ion-arrow-forward-circle-outline"
+          icon-size="w-5 h-5"
+        >
+          Submit</NButton
         >
       </form>
       <div class="flex flex-col gap-2 mt-1 mb-4">

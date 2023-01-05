@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import unocss from "unocss/vite";
-import { presetUno } from "unocss";
+import { presetIcons, presetUno, transformerVariantGroup } from "unocss";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -12,7 +12,8 @@ export default defineConfig({
     vue(),
     vueJsx(),
     unocss({
-      presets: [presetUno()],
+      presets: [presetUno(), presetIcons()],
+      transformers: [transformerVariantGroup()],
     }),
   ],
   resolve: {

@@ -48,13 +48,19 @@ const submitHandler = (action: "login" | "signup") => {
         placeholder="Confirm password"
         v-model="confirmPassword"
       />
-      <NButton additional-classes="w-32 self-center"
-        ><v-icon name="md-login" />
+      <NButton
+        additional-classes="w-32 self-center"
+        icon="i-ion-log-in-outline"
+      >
         {{ isLoginForm ? "Login" : "Signup" }}</NButton
       >
     </form>
-    <NButton @click="switchFormsHandler" additional-classes="w-32 self-center"
-      ><v-icon name="hi-arrow-left" />
+    <NButton
+      @click="switchFormsHandler"
+      additional-classes="w-32 self-center"
+      icon="i-ion-arrow-back-outline"
+      icon-size="w-5 h-5"
+    >
       {{ isLoginForm ? "Signup?" : "Login?" }}</NButton
     >
   </div>

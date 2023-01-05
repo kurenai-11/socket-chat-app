@@ -5,6 +5,11 @@ import type { ButtonHTMLAttributes } from "vue";
 
 export interface CustomButtonProps extends ButtonHTMLAttributes {
   additionalClasses?: string;
+  // Unocss icon name
+  icon?: string;
+  // UnoCSS(tailwind) classes ↓
+  iconSize?: string;
+  additionIconClasses?: string;
 }
 
 defineProps<CustomButtonProps>();
@@ -14,8 +19,19 @@ const baseClasses =
 </script>
 <template>
   <button
-    v-bind="{ ...$props, class: tw(baseClasses, $props.additionalClasses) }"
+    v-bind="{
+      ...$props,
+      class: tw(
+        baseClasses,
+        icon && `flex items-center justify-center gap-1`,
+        $props.additionalClasses
+      ),
+    }"
   >
+    <div
+      v-if="icon"
+      :class="tw(icon, iconSize ? iconSize : 'w-6 h-6', additionIconClasses)"
+    />
     <slot />
   </button>
 </template>

@@ -1,9 +1,11 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@iconify-json/ion': ^1.1.6
   '@rushstack/eslint-patch': ^1.1.4
   '@types/jsdom': ^20.0.1
   '@types/node': ^18.11.12
+  '@unocss/preset-icons': ^0.48.0
   '@unocss/transformer-variant-group': ^0.48.0
   '@vitejs/plugin-vue': ^4.0.0
   '@vitejs/plugin-vue-jsx': ^3.0.0
@@ -15,7 +17,6 @@ specifiers:
   eslint-plugin-vue: ^9.3.0
   jsdom: ^20.0.3
   npm-run-all: ^4.1.5
-  oh-vue-icons: 1.0.0-rc3
   pinia: ^2.0.28
   reset.css: ^2.0.2
   socket.io-client: ^4.5.4
@@ -30,7 +31,6 @@ specifiers:
 
 dependencies:
   date-fns: 2.29.3
-  oh-vue-icons: 1.0.0-rc3_vue@3.2.45
   pinia: 2.0.28_e7lp6ggkpgyi5vqd44m2kxvk6i
   reset.css: 2.0.2
   socket.io-client: 4.5.4
@@ -39,9 +39,11 @@ dependencies:
   vue-router: 4.1.6_vue@3.2.45
 
 devDependencies:
+  '@iconify-json/ion': 1.1.6
   '@rushstack/eslint-patch': 1.2.0
   '@types/jsdom': 20.0.1
   '@types/node': 18.11.18
+  '@unocss/preset-icons': 0.48.0
   '@unocss/transformer-variant-group': 0.48.0
   '@vitejs/plugin-vue': 4.0.0_vite@4.0.3+vue@3.2.45
   '@vitejs/plugin-vue-jsx': 3.0.0_vite@4.0.3+vue@3.2.45
@@ -598,6 +600,12 @@ packages:
 
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
+    dev: true
+
+  /@iconify-json/ion/1.1.6:
+    resolution: {integrity: sha512-WG1qcPF9ikYaJP32luMZm61wUW2wr8U3TkZ+b3aZ4FmN+wLSNOp2eHarIb6ht6HxhjR4ibt3QcKxz3TD6x7esA==}
+    dependencies:
+      '@iconify/types': 2.0.0
     dev: true
 
   /@iconify/types/2.0.0:
@@ -2721,19 +2729,6 @@ packages:
       object-keys: 1.1.1
     dev: true
 
-  /oh-vue-icons/1.0.0-rc3_vue@3.2.45:
-    resolution: {integrity: sha512-+k2YC6piK7sEZnwbkQF3UokFPMmgqpiLP6f/H0ovQFLl20QA5V4U8EcI6EclD2Lt5NMQ3k6ilLGo8XyXqdVSvg==}
-    peerDependencies:
-      '@vue/composition-api': ^1.0.0-rc.1
-      vue: ^2.0.0 || >=3.0.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-    dependencies:
-      vue: 3.2.45
-      vue-demi: 0.12.5_vue@3.2.45
-    dev: false
-
   /ohmyfetch/0.4.21:
     resolution: {integrity: sha512-VG7f/JRvqvBOYvL0tHyEIEG7XHWm7OqIfAs6/HqwWwDfjiJ1g0huIpe5sFEmyb+7hpFa1EGNH2aERWR72tlClw==}
     dependencies:
@@ -3532,21 +3527,6 @@ packages:
       - supports-color
       - terser
     dev: true
-
-  /vue-demi/0.12.5_vue@3.2.45:
-    resolution: {integrity: sha512-BREuTgTYlUr0zw0EZn3hnhC3I6gPWv+Kwh4MCih6QcAeaTlaIX0DwOVN0wHej7hSvDPecz4jygy/idsgKfW58Q==}
-    engines: {node: '>=12'}
-    hasBin: true
-    requiresBuild: true
-    peerDependencies:
-      '@vue/composition-api': ^1.0.0-rc.1
-      vue: ^3.0.0-0 || ^2.6.0
-    peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
-    dependencies:
-      vue: 3.2.45
-    dev: false
 
   /vue-demi/0.13.11_vue@3.2.45:
     resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
