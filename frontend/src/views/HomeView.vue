@@ -70,7 +70,7 @@ onUpdated(() => {
 onUnmounted(() => {
   // socket should disconnect itself automatically
   // but just in case let's disconnect it manually as well
-  socket.value.disconnect();
+  isConnected.value && socket.value.disconnect();
 });
 </script>
 
