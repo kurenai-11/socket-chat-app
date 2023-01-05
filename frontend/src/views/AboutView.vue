@@ -1,6 +1,6 @@
 <template>
-  <main class="flex flex-col items-center gap-2">
-    <h1 class="text-xl font-bold text-zinc-4">
+  <main class="flex flex-col items-center mt-2 gap-2">
+    <h1 class="text-xl text-center font-bold text-zinc-4">
       This is a socket chat application made in Vue, using socket.io for real
       time communication.
     </h1>
