@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from "vue";
-import { vAutoAnimate } from "@formkit/auto-animate";
 import io, { Socket } from "socket.io-client";
 import type {
   Message,

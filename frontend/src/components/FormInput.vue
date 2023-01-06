@@ -21,7 +21,7 @@ defineEmits<{ (e: "update:modelValue", val: string): void }>();
       class: tw(baseClasses, $props.additionalClasses),
       value: $props.modelValue,
     }"
-    @change="
+    @input="
       $emit('update:modelValue', ($event.target as HTMLInputElement).value)
     "
   />
