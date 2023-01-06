@@ -16,6 +16,8 @@ model Message {
   userId    Int
   createdAt DateTime @default(now())
   content   String   @db.VarChar(255)
+
+  @@index([createdAt])
 }
 
 model User {
@@ -27,4 +29,7 @@ model User {
   bannedUntil DateTime  @default(now())
   password    String    @db.VarChar(64)
   messages    Message[]
+
+  @@unique([username])
+  @@index([createdAt])
 }
