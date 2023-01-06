@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from "vue";
+import { vAutoAnimate } from "@formkit/auto-animate";
 import io, { Socket } from "socket.io-client";
 import type {
   Message,
@@ -77,7 +78,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main class="flex flex-col gap-2 items-center">
+  <main class="flex flex-col gap-2 items-center" v-auto-animate>
     <h1 class="text-xl font-bold">This is the main page.</h1>
     <p>
       Currently you are {{ isConnected ? "connected" : "disconnected" }}
@@ -89,7 +90,7 @@ onUnmounted(() => {
       additional-classes="font-bold bg-green-8 hover:outline-cyan-9"
       >Connect</NButton
     >
-    <div v-if="isConnected" class="flex flex-col items-center gap-2">
+    <div v-else class="flex flex-col items-center gap-2">
       <NButton
         @click="disconnect"
         additional-classes="mb-1 text-zinc-1 font-bold bg-[#78222b] hover:outline-orange-7"
@@ -113,7 +114,7 @@ onUnmounted(() => {
           Submit</NButton
         >
       </form>
-      <div class="flex flex-col gap-2 mt-1 mb-4">
+      <div v-auto-animate class="flex flex-col gap-2 mt-1 mb-4">
         <ChatMessage
           :key="message.id"
           v-for="message of messages"
