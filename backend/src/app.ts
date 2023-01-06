@@ -1,9 +1,13 @@
 import express from "express";
 import cors from "cors";
 import http from "http";
+import { PrismaClient } from "@prisma/client";
 import { Server } from "socket.io";
 import { nanoid } from "nanoid";
 import { ClientToServerEvents, ServerToClientEvents } from "./types.js";
+
+// initializing prisma
+export const prisma = new PrismaClient();
 
 // initializing express and the socket http server
 const app = express();
@@ -62,9 +66,18 @@ io.on("connection", (socket) => {
 // starting the server
 const port = process.env.PORT || 5000;
 
-// iife for future async stuff
-(async () => {
+const main = async () => {
   server.listen(port, () => {
     console.log(`listening on port ${port}`);
   });
-})();
+};
+
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
