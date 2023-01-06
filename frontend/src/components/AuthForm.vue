@@ -29,6 +29,7 @@ const submitHandler = (action: "login" | "signup") => {
     <form
       @submit.prevent="submitHandler(isLoginForm ? 'login' : 'signup')"
       class="flex flex-col w-full gap-2 justify-center items-center"
+      v-auto-animate
     >
       <FormInput
         additional-classes="w-full"
