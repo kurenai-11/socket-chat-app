@@ -28,6 +28,7 @@ const authSchema = z
 
 const router = Router();
 
+// a single /auth route
 router.post("/", async (req, res) => {
   const authData = authSchema.safeParse(req.body);
   if (!authData.success) {
