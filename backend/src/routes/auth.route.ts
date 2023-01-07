@@ -68,7 +68,6 @@ router.post("/", async (req, res) => {
         .status(409)
         .send({ status: "error", message: "user already exists" });
   }
-  res.send("ok");
 });
 
 export default router;
