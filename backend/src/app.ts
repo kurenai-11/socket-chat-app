@@ -67,6 +67,7 @@ io.on("connection", (socket) => {
 const port = process.env.PORT || 5000;
 
 const main = async () => {
+  await prisma.$connect();
   server.listen(port, () => {
     console.log(`listening on port ${port}`);
   });
