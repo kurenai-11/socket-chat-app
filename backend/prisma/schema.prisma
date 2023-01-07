@@ -10,12 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  User // A normal user
-  Moderator // A user that can moderate normal users
-  Admin // A user that can also moderate moderators
-}
-
 model Message {
   id        Int      @id @default(autoincrement())
   author    User     @relation(fields: [userId], references: [id])
@@ -39,4 +33,10 @@ model User {
   messages    Message[]
 
   @@index([createdAt])
+}
+
+enum Role {
+  User // A normal user
+  Moderator // A user that can moderate normal users
+  Admin // A user that can also moderate moderators
 }
