@@ -12,7 +12,6 @@ export const loginUser = async (
   // and user password is incorrect
   if (!foundUser) return false;
   const result = await bcrypt.compare(password, foundUser.password);
-  // to create jwt token here
   return result;
 };
 
