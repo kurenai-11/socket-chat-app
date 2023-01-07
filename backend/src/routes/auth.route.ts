@@ -63,10 +63,13 @@ router.post("/", async (req, res) => {
     }
   } else {
     const result = await signUpUser(login, password);
-    if (!result)
+    if (result === null)
       return res
         .status(409)
         .send({ status: "error", message: "user already exists" });
+    // setting a field to undefined makes the object not include the said field
+    const userToSend = { ...result, password: undefined };
+    return res.json({ status: "success", user: userToSend });
   }
 });
 
