@@ -1,6 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
 import { prisma } from "../app.js";
 import { z } from "zod";
 import { signUpUser } from "../controllers/auth.controller.js";
@@ -101,10 +101,33 @@ router.post("/verify", (req, res) => {
   const authData = authSchema.safeParse(req.body);
   if (!authData.success) {
     return res
-      .status(403)
-      .json({ status: "error", message: "the auth token is invalid" });
+      .status(400)
+      .json({ status: "error", message: "request is invalid" });
   }
-  res.json({ status: "success" });
+  const { userId, token } = authData.data;
+  let result: JwtPayload & { userId?: number };
+  try {
+    result = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+  } catch (e) {
+    if (e instanceof JsonWebTokenError) {
+      return res
+        .status(403)
+        .json({ status: "error", message: "auth token is invalid" });
+    }
+    console.error(e);
+    return res
+      .status(500)
+      .json({ status: "error", message: "server side error" });
+  }
+  // jwt issue validity is verified
+  // for the rare case where there is no user id specified in the token
+  // (invalid sign)
+  if (!result.userId)
+    return res
+      .status(401)
+      .json({ status: "error", message: "auth token is invalid" });
+  // now we know that jwt is fully valid
+  res.json({ status: "success", userId });
 });
 
 export default router;
