@@ -2,7 +2,6 @@ import { Router } from "express";
 import { z } from "zod";
 import { loginUser, signUpUser } from "../controllers/auth.controller.js";
 
-// regex to check if a string has 1 uppercase letter
 const authSchema = z
   .object({
     action: z.enum(["login", "signup"]),
