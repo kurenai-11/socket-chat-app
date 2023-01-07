@@ -5,7 +5,8 @@ import { prisma } from "../app.js";
 import { z } from "zod";
 import { signUpUser } from "../controllers/auth.controller.js";
 
-const authSchema = z
+// a schema for logging in with a login and a password
+const loginSchema = z
   .object({
     action: z.enum(["login", "signup"]),
     login: z.string().min(4).max(20),
@@ -27,6 +28,13 @@ const authSchema = z
       ),
   })
   .strict();
+// a schema for authentication through a jwt token
+const authSchema = z
+  .object({
+    userId: z.number().nonnegative(),
+    token: z.string(),
+  })
+  .strict();
 
 // make sure to set the JWT_SECRET environment variable
 // in ./.env file
@@ -38,9 +46,9 @@ const createJwt = (userId: number) => {
 
 const router = Router();
 
-// a single /auth route
+// a single /auth route for login and signup using credentials
 router.post("/", async (req, res) => {
-  const authData = authSchema.safeParse(req.body);
+  const authData = loginSchema.safeParse(req.body);
   if (!authData.success) {
     return res
       .status(400)
@@ -84,6 +92,17 @@ router.post("/", async (req, res) => {
     const token = createJwt(userToSend.id);
     return res.json({ status: "success", user: userToSend, token });
   }
+});
+
+// a route to initially verify the login through the jwt token
+router.post("/verify", (req, res) => {
+  const authData = authSchema.safeParse(req.body);
+  if (!authData.success) {
+    return res
+      .status(403)
+      .json({ status: "error", message: "the auth token is invalid" });
+  }
+  res.json({ status: "success" });
 });
 
 export default router;
