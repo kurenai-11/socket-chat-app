@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const main = async () => {
   prisma.$connect();
-  console.log("success");
+  console.log(await prisma.user.findMany());
 };
 
 main()

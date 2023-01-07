@@ -10,6 +10,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  User // A normal user
+  Moderator // A user that can moderate normal users
+  Admin // A user that can also moderate moderators
+}
+
 model Message {
   id        Int      @id @default(autoincrement())
   author    User     @relation(fields: [userId], references: [id])
@@ -23,6 +29,7 @@ model Message {
 
 model User {
   id          Int       @id @default(autoincrement())
+  role        Role      @default(User)
   createdAt   DateTime  @default(now())
   username    String    @db.VarChar(64)
   displayName String?   @db.VarChar(64)
