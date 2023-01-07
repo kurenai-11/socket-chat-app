@@ -15,9 +15,10 @@ model Message {
   author    User     @relation(fields: [userId], references: [id])
   userId    Int
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
   content   String   @db.VarChar(255)
 
-  @@index([createdAt])
+  @@index([createdAt, updatedAt])
 }
 
 model User {
