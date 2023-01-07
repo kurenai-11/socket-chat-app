@@ -22,15 +22,16 @@ model Message {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  role        Role      @default(User)
-  createdAt   DateTime  @default(now())
-  username    String    @unique
-  displayName String?
-  banned      Boolean   @default(false)
-  bannedUntil DateTime  @default(now())
-  password    String
-  messages    Message[]
+  id           Int       @id @default(autoincrement())
+  role         Role      @default(User)
+  createdAt    DateTime  @default(now())
+  username     String    @unique
+  displayName  String?
+  banned       Boolean   @default(false)
+  bannedUntil  DateTime  @default(now())
+  password     String
+  refreshToken String[] // this is a list of INVALID refreshTokens (if a user logged out etc.)
+  messages     Message[]
 
   @@index([createdAt])
 }

@@ -32,15 +32,15 @@ const loginSchema = z
 const authSchema = z
   .object({
     userId: z.number().nonnegative(),
-    token: z.string(),
+    refreshToken: z.string(),
   })
   .strict();
 
-// make sure to set the JWT_SECRET environment variable
+// make sure to set the JWT_ACCESS_SECRET environment variable
 // in ./.env file
-const createJwt = (userId: number) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET || "secret", {
-    expiresIn: "3d",
+const createJwt = (userId: number, type: "access" | "refresh") => {
+  return jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET!, {
+    expiresIn: type === "access" ? "5m" : "3d",
   });
 };
 
@@ -72,10 +72,12 @@ router.post("/", async (req, res) => {
       // todo: create jwt here
       // setting a field to undefined makes the object not include the said field
       const userToSend = { ...foundUser, password: undefined };
-      const token = createJwt(userToSend.id);
+      const accessToken = createJwt(userToSend.id, "access");
+      const refreshToken = createJwt(userToSend.id, "refresh");
+      res.cookie("jwt", refreshToken, { httpOnly: true });
       return res
         .status(200)
-        .json({ status: "success", user: userToSend, token });
+        .json({ status: "success", user: userToSend, accessToken });
     } else {
       return res.status(401).json({
         status: "error",
@@ -90,12 +92,12 @@ router.post("/", async (req, res) => {
         .send({ status: "error", message: "user already exists" });
     // setting a field to undefined makes the object not include the said field
     const userToSend = { ...result, password: undefined };
-    const token = createJwt(userToSend.id);
-    return res.json({ status: "success", user: userToSend, token });
+    const accessToken = createJwt(userToSend.id, "access");
+    return res.json({ status: "success", user: userToSend, accessToken });
   }
 });
 
-// a route to initially verify the login through the jwt token
+// a route to verify a refresh token and issue a new access token
 // /auth/verify
 router.post("/verify", async (req, res) => {
   const authData = authSchema.safeParse(req.body);
@@ -104,15 +106,18 @@ router.post("/verify", async (req, res) => {
       .status(400)
       .json({ status: "error", message: "request is invalid" });
   }
-  const { userId, token } = authData.data;
+  const { userId, refreshToken } = authData.data;
   let result: JwtPayload & { userId?: number };
   try {
-    result = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    result = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET!
+    ) as JwtPayload;
   } catch (e) {
     if (e instanceof jwt.JsonWebTokenError) {
       return res
         .status(403)
-        .json({ status: "error", message: "auth token is invalid" });
+        .json({ status: "error", message: "refresh token is invalid" });
     }
     console.error(e);
     return res
@@ -125,12 +130,22 @@ router.post("/verify", async (req, res) => {
   if (!result.userId)
     return res
       .status(401)
-      .json({ status: "error", message: "auth token is invalid" });
+      .json({ status: "error", message: "refresh token is invalid" });
   // now we know that jwt is fully valid
   const foundUser = await prisma.user.findUnique({ where: { id: userId } });
+  if (!foundUser)
+    return res.status(404).json({ status: "error", message: "user not found" });
+  // if refreshToken is banned(user has logged out)
+  if (foundUser.refreshToken.includes(refreshToken)) {
+    return res
+      .status(403)
+      .json({ status: "error", message: "refresh token is invalid" });
+  }
+  // issuing a new access token
+  const accessToken = createJwt(result.userId, "access");
   // setting a field to undefined makes it not being included in the response
   const userToSend = { ...foundUser, password: undefined };
-  res.json({ status: "success", user: userToSend });
+  res.json({ status: "success", user: userToSend, accessToken });
 });
 
 export default router;
