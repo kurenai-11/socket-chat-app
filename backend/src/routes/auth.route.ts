@@ -1,6 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import jwt, { JsonWebTokenError, JwtPayload } from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
 import { prisma } from "../app.js";
 import { z } from "zod";
 import { signUpUser } from "../controllers/auth.controller.js";
@@ -109,7 +109,7 @@ router.post("/verify", (req, res) => {
   try {
     result = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
   } catch (e) {
-    if (e instanceof JsonWebTokenError) {
+    if (e instanceof jwt.JsonWebTokenError) {
       return res
         .status(403)
         .json({ status: "error", message: "auth token is invalid" });
