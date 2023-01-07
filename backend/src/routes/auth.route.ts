@@ -139,7 +139,7 @@ router.post("/verify", async (req, res) => {
     return res
       .status(401)
       .json({ status: "error", message: "refresh token is invalid" });
-  // now we know that jwt is fully valid
+  // now we know that the refresh token is fully valid
   const foundUser = await prisma.user.findUnique({ where: { id: userId } });
   if (!foundUser)
     return res.status(404).json({ status: "error", message: "user not found" });
