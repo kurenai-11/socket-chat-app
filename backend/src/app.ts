@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 import { Server } from "socket.io";
 import { nanoid } from "nanoid";
 import { ClientToServerEvents, ServerToClientEvents } from "./types.js";
+import authRouter from "./routes/auth.route.js";
 
 // initializing prisma
 export const prisma = new PrismaClient();
@@ -27,6 +28,7 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.send("yes the server is working");
 });
+app.use("/auth", authRouter);
 
 // socket related
 io.on("connection", (socket) => {
@@ -80,5 +82,4 @@ main()
   .catch(async (e) => {
     console.error(e);
     await prisma.$disconnect();
-    process.exit(1);
   });

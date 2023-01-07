@@ -16,9 +16,22 @@ const switchFormsHandler = () => {
   confirmPassword.value = "";
   isLoginForm.value = !isLoginForm.value;
 };
-const submitHandler = (action: "login" | "signup") => {
+const submitHandler = async (action: "login" | "signup") => {
   console.log(`submit ${action}`);
-  // to implement authentication
+  if (!login.value || !password.value) return;
+  const res = await fetch("http://192.168.1.200:5000/auth", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+    body: JSON.stringify({
+      action,
+      login: login.value,
+      password: password.value,
+    }),
+  });
+  const authData = await res.json();
+  console.log("authData :>> ", authData);
 };
 </script>
 <template>
