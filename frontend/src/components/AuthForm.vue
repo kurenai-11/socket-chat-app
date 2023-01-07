@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { BACKEND_URL } from "@/main";
 import { ref } from "vue";
 import FormInput from "./FormInput.vue";
 import NButton from "./NButton.vue";
@@ -19,7 +20,7 @@ const switchFormsHandler = () => {
 const submitHandler = async (action: "login" | "signup") => {
   console.log(`submit ${action}`);
   if (!login.value || !password.value) return;
-  const res = await fetch("http://192.168.1.200:5000/auth", {
+  const res = await fetch(`${BACKEND_URL}/auth`, {
     method: "POST",
     headers: {
       "Content-type": "application/json; charset=UTF-8",
