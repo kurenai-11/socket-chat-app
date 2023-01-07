@@ -46,7 +46,8 @@ const createJwt = (userId: number) => {
 
 const router = Router();
 
-// a single /auth route for login and signup using credentials
+// a single route for login and signup using credentials
+// /auth
 router.post("/", async (req, res) => {
   const authData = loginSchema.safeParse(req.body);
   if (!authData.success) {
@@ -95,6 +96,7 @@ router.post("/", async (req, res) => {
 });
 
 // a route to initially verify the login through the jwt token
+// /auth/verify
 router.post("/verify", (req, res) => {
   const authData = authSchema.safeParse(req.body);
   if (!authData.success) {
