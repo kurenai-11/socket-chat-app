@@ -1,6 +1,8 @@
 import { Router } from "express";
+import bcrypt from "bcrypt";
+import { prisma } from "../app.js";
 import { z } from "zod";
-import { loginUser, signUpUser } from "../controllers/auth.controller.js";
+import { signUpUser } from "../controllers/auth.controller.js";
 
 const authSchema = z
   .object({
@@ -37,11 +39,22 @@ router.post("/", async (req, res) => {
   }
   const { login, password, action } = authData.data;
   if (action === "login") {
-    const result = await loginUser(login, password);
-    if (result) {
-      return res
-        .status(200)
-        .json({ status: "success", message: "login successful" });
+    const foundUser = await prisma.user.findUnique({
+      where: { username: login },
+    });
+    // we will not make a distinction between user not found
+    // and password is incorrect
+    if (!foundUser)
+      return res.status(401).json({
+        status: "error",
+        message: "username or password is incorrect",
+      });
+    const passwordVerified = await bcrypt.compare(password, foundUser.password);
+    if (passwordVerified) {
+      // todo: create jwt here
+      // setting a field to undefined makes the object not include the said field
+      const userToSend = { ...foundUser, password: undefined };
+      return res.status(200).json({ status: "success", user: userToSend });
     } else {
       return res.status(401).json({
         status: "error",

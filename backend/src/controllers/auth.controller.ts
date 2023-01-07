@@ -1,20 +1,6 @@
 import { prisma } from "../app.js";
 import bcrypt from "bcrypt";
 
-export const loginUser = async (
-  login: string,
-  password: string
-): Promise<boolean> => {
-  const foundUser = await prisma.user.findUnique({
-    where: { username: login },
-  });
-  // we will not make a distinction between user does not exist
-  // and user password is incorrect
-  if (!foundUser) return false;
-  const result = await bcrypt.compare(password, foundUser.password);
-  return result;
-};
-
 export const signUpUser = async (
   login: string,
   password: string
