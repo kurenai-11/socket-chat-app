@@ -31,13 +31,12 @@ model User {
   id          Int       @id @default(autoincrement())
   role        Role      @default(User)
   createdAt   DateTime  @default(now())
-  username    String    @db.VarChar(64)
+  username    String    @unique @db.VarChar(64)
   displayName String?   @db.VarChar(64)
   banned      Boolean   @default(false)
   bannedUntil DateTime  @default(now())
   password    String    @db.VarChar(64)
   messages    Message[]
 
-  @@unique([username])
   @@index([createdAt])
 }
