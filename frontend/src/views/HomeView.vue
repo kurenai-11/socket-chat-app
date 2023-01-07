@@ -9,12 +9,11 @@ import type {
 import ChatMessage from "@/components/ChatMessage.vue";
 import FormInput from "@/components/FormInput.vue";
 import NButton from "@/components/NButton.vue";
+import { BACKEND_URL } from "@/main";
 
 // creating a socket connection
-// I use 192.168.1.200 which is my local lan IP
-// you can replace it with http://localhost:5000 or whatever your local ip of the backend is
 const rawSocket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
-  "http://192.168.1.200:5000",
+  BACKEND_URL,
   { autoConnect: false }
 );
 // for reactivity purposes

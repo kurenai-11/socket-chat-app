@@ -1,9 +1,18 @@
 import express from "express";
 import cors from "cors";
 import http from "http";
+import dotenv from "dotenv";
+import { PrismaClient } from "@prisma/client";
 import { Server } from "socket.io";
 import { nanoid } from "nanoid";
 import { ClientToServerEvents, ServerToClientEvents } from "./types.js";
+import authRouter from "./routes/auth.route.js";
+
+// load dotenv
+dotenv.config();
+
+// initializing prisma
+export const prisma = new PrismaClient();
 
 // initializing express and the socket http server
 const app = express();
@@ -23,6 +32,7 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.send("yes the server is working");
 });
+app.use("/auth", authRouter);
 
 // socket related
 io.on("connection", (socket) => {
@@ -62,9 +72,18 @@ io.on("connection", (socket) => {
 // starting the server
 const port = process.env.PORT || 5000;
 
-// iife for future async stuff
-(async () => {
+const main = async () => {
+  await prisma.$connect();
   server.listen(port, () => {
     console.log(`listening on port ${port}`);
   });
-})();
+};
+
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+  });

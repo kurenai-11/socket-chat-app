@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { BACKEND_URL } from "@/main";
 import { ref } from "vue";
 import FormInput from "./FormInput.vue";
 import NButton from "./NButton.vue";
@@ -16,9 +17,22 @@ const switchFormsHandler = () => {
   confirmPassword.value = "";
   isLoginForm.value = !isLoginForm.value;
 };
-const submitHandler = (action: "login" | "signup") => {
+const submitHandler = async (action: "login" | "signup") => {
   console.log(`submit ${action}`);
-  // to implement authentication
+  if (!login.value || !password.value) return;
+  const res = await fetch(`${BACKEND_URL}/auth`, {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+    body: JSON.stringify({
+      action,
+      login: login.value,
+      password: password.value,
+    }),
+  });
+  const authData = await res.json();
+  console.log("authData :>> ", authData);
 };
 </script>
 <template>
