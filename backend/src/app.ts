@@ -11,6 +11,8 @@ import authRouter from "./routes/auth.route.js";
 // load dotenv
 dotenv.config();
 
+export const FRONTEND_URL = "http://192.168.1.200:5173";
+
 // initializing prisma
 export const prisma = new PrismaClient();
 
@@ -19,14 +21,13 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
+    origin: FRONTEND_URL,
   },
 });
 
 // express related
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 
 // routes
 app.get("/", (req, res) => {

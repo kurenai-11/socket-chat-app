@@ -74,7 +74,10 @@ router.post("/", async (req, res) => {
       const userToSend = { ...foundUser, password: undefined };
       const accessToken = createJwt(userToSend.id, "access");
       const refreshToken = createJwt(userToSend.id, "refresh");
-      res.cookie("jwt", refreshToken, { httpOnly: true });
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
+      });
       return res
         .status(200)
         .json({ status: "success", user: userToSend, accessToken });
@@ -93,6 +96,11 @@ router.post("/", async (req, res) => {
     // setting a field to undefined makes the object not include the said field
     const userToSend = { ...result, password: undefined };
     const accessToken = createJwt(userToSend.id, "access");
+    const refreshToken = createJwt(userToSend.id, "refresh");
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
+    });
     return res.json({ status: "success", user: userToSend, accessToken });
   }
 });

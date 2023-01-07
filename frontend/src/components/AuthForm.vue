@@ -22,6 +22,8 @@ const submitHandler = async (action: "login" | "signup") => {
   if (!login.value || !password.value) return;
   const res = await fetch(`${BACKEND_URL}/auth`, {
     method: "POST",
+    credentials: "include",
+    mode: "cors",
     headers: {
       "Content-type": "application/json; charset=UTF-8",
     },
