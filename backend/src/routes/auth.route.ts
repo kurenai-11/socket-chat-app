@@ -97,7 +97,7 @@ router.post("/", async (req, res) => {
 
 // a route to initially verify the login through the jwt token
 // /auth/verify
-router.post("/verify", (req, res) => {
+router.post("/verify", async (req, res) => {
   const authData = authSchema.safeParse(req.body);
   if (!authData.success) {
     return res
@@ -127,7 +127,10 @@ router.post("/verify", (req, res) => {
       .status(401)
       .json({ status: "error", message: "auth token is invalid" });
   // now we know that jwt is fully valid
-  res.json({ status: "success", userId });
+  const foundUser = await prisma.user.findUnique({ where: { id: userId } });
+  // setting a field to undefined makes it not being included in the response
+  const userToSend = { ...foundUser, password: undefined };
+  res.json({ status: "success", user: userToSend });
 });
 
 export default router;
