@@ -1,11 +1,15 @@
 import express from "express";
 import cors from "cors";
 import http from "http";
+import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { Server } from "socket.io";
 import { nanoid } from "nanoid";
 import { ClientToServerEvents, ServerToClientEvents } from "./types.js";
 import authRouter from "./routes/auth.route.js";
+
+// load dotenv
+dotenv.config();
 
 // initializing prisma
 export const prisma = new PrismaClient();

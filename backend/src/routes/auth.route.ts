@@ -1,5 +1,6 @@
 import { Router } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { prisma } from "../app.js";
 import { z } from "zod";
 import { signUpUser } from "../controllers/auth.controller.js";
@@ -26,6 +27,14 @@ const authSchema = z
       ),
   })
   .strict();
+
+// make sure to set the JWT_SECRET environment variable
+// in ./.env file
+const createJwt = (userId: number) => {
+  return jwt.sign({ userId }, process.env.JWT_SECRET || "secret", {
+    expiresIn: "3d",
+  });
+};
 
 const router = Router();
 
@@ -54,7 +63,10 @@ router.post("/", async (req, res) => {
       // todo: create jwt here
       // setting a field to undefined makes the object not include the said field
       const userToSend = { ...foundUser, password: undefined };
-      return res.status(200).json({ status: "success", user: userToSend });
+      const token = createJwt(userToSend.id);
+      return res
+        .status(200)
+        .json({ status: "success", user: userToSend, token });
     } else {
       return res.status(401).json({
         status: "error",
@@ -69,7 +81,8 @@ router.post("/", async (req, res) => {
         .send({ status: "error", message: "user already exists" });
     // setting a field to undefined makes the object not include the said field
     const userToSend = { ...result, password: undefined };
-    return res.json({ status: "success", user: userToSend });
+    const token = createJwt(userToSend.id);
+    return res.json({ status: "success", user: userToSend, token });
   }
 });
 
