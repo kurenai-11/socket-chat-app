@@ -49,6 +49,8 @@ const createJwt = (userId: number, type: "access" | "refresh") => {
 };
 
 // a place to remove unwanted fields from the data we will send to the client
+// setting a field to undefined makes it so the field
+// will not be included in the response
 const createUserToSend = (user: User) => {
   return { ...user, password: undefined, invalidRefreshTokens: undefined };
 };
