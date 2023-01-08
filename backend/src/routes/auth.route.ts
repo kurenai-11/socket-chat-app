@@ -6,7 +6,7 @@ import { z } from "zod";
 import { signUpUser } from "../controllers/auth.controller.js";
 import { User } from "@prisma/client";
 
-const validUsernameRegex = /[a-zA-Z0-9-_]/g;
+const validUsernameRegex = /[a-zA-Z0-9\-_]/g;
 // a schema for logging in with a login and a password
 const loginSchema = z
   .object({
