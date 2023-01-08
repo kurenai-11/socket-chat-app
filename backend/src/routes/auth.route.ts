@@ -31,17 +31,21 @@ const loginSchema = z
 // a schema for authentication through a jwt token
 const authSchema = z
   .object({
-    userId: z.number().nonnegative(),
     refreshToken: z.string(),
   })
   .strict();
 
-// make sure to set the JWT_ACCESS_SECRET environment variable
 // in ./.env file
 const createJwt = (userId: number, type: "access" | "refresh") => {
-  return jwt.sign({ userId }, process.env.JWT_ACCESS_SECRET!, {
-    expiresIn: type === "access" ? "5m" : "3d",
-  });
+  return jwt.sign(
+    { userId },
+    type === "access"
+      ? process.env.JWT_ACCESS_SECRET!
+      : process.env.JWT_REFRESH_SECRET!,
+    {
+      expiresIn: type === "access" ? "5m" : "3d",
+    }
+  );
 };
 
 const router = Router();
@@ -114,7 +118,7 @@ router.post("/verify", async (req, res) => {
       .status(400)
       .json({ status: "error", message: "request is invalid" });
   }
-  const { userId, refreshToken } = authData.data;
+  const { refreshToken } = authData.data;
   let result: JwtPayload & { userId?: number };
   try {
     result = jwt.verify(
@@ -140,7 +144,9 @@ router.post("/verify", async (req, res) => {
       .status(401)
       .json({ status: "error", message: "refresh token is invalid" });
   // now we know that the refresh token is fully valid
-  const foundUser = await prisma.user.findUnique({ where: { id: userId } });
+  const foundUser = await prisma.user.findUnique({
+    where: { id: result.userId },
+  });
   if (!foundUser)
     return res.status(404).json({ status: "error", message: "user not found" });
   // if refreshToken is banned(user has logged out)
