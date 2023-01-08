@@ -4,9 +4,9 @@ Basically what the title says.
 
 ## Development setup
 
-1. Set **FRONTEND_URL** variable in backend/src/app.ts to your frontend url.
-2. Set **BACKEND_URL** variable in frontend/src/main.ts to your backend url.
-3. Create backend/.env file and set these environment variables there: **DATABASE_URL**, **JWT_ACCESS_SECRET** and **JWT_REFRESH_SECRET**.
+1. Set **FRONTEND_URL** variable in _backend/src/app.ts_ to your frontend url.
+2. Set **BACKEND_URL** variable in _frontend/src/main.ts_ to your backend url.
+3. Create _backend/.env_ file and set these environment variables there: **DATABASE_URL**, **JWT_ACCESS_SECRET** and **JWT_REFRESH_SECRET**.
 4. Edit prisma schema if you need to.
 5. Start in the root directory of this project (where this readme.md is) and execute these commands.
 6. `npm i` - install concurrently locally.
