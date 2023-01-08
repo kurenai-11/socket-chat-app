@@ -81,7 +81,6 @@ router.post("/", async (req, res) => {
     const passwordVerified = await bcrypt.compare(password, foundUser.password);
     if (passwordVerified) {
       // todo: create jwt here
-      // setting a field to undefined makes the object not include the said field
       const userToSend = createUserToSend(foundUser);
       const accessToken = createJwt(userToSend.id, "access");
       const refreshToken = createJwt(userToSend.id, "refresh");
@@ -104,7 +103,6 @@ router.post("/", async (req, res) => {
       return res
         .status(409)
         .send({ status: "error", message: "user already exists" });
-    // setting a field to undefined makes the object not include the said field
     const userToSend = createUserToSend(result);
     const accessToken = createJwt(userToSend.id, "access");
     const refreshToken = createJwt(userToSend.id, "refresh");
@@ -164,7 +162,6 @@ router.post("/verify", async (req, res) => {
   }
   // issuing a new access token
   const accessToken = createJwt(result.userId, "access");
-  // setting a field to undefined makes it not being included in the response
   const userToSend = createUserToSend(foundUser);
   res.json({ status: "success", user: userToSend, accessToken });
 });
