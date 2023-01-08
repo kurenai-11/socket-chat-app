@@ -4,6 +4,7 @@ import jwt, { type JwtPayload } from "jsonwebtoken";
 import { prisma } from "../app.js";
 import { z } from "zod";
 import { signUpUser } from "../controllers/auth.controller.js";
+import { User } from "@prisma/client";
 
 // a schema for logging in with a login and a password
 const loginSchema = z
@@ -35,7 +36,6 @@ const authSchema = z
   })
   .strict();
 
-// in ./.env file
 const createJwt = (userId: number, type: "access" | "refresh") => {
   return jwt.sign(
     { userId },
@@ -46,6 +46,11 @@ const createJwt = (userId: number, type: "access" | "refresh") => {
       expiresIn: type === "access" ? "5m" : "3d",
     }
   );
+};
+
+// a place to remove unwanted fields from the data we will send to the client
+const createUserToSend = (user: User) => {
+  return { ...user, password: undefined, invalidRefreshTokens: undefined };
 };
 
 const router = Router();
@@ -75,7 +80,7 @@ router.post("/", async (req, res) => {
     if (passwordVerified) {
       // todo: create jwt here
       // setting a field to undefined makes the object not include the said field
-      const userToSend = { ...foundUser, password: undefined };
+      const userToSend = createUserToSend(foundUser);
       const accessToken = createJwt(userToSend.id, "access");
       const refreshToken = createJwt(userToSend.id, "refresh");
       res.cookie("jwt", refreshToken, {
@@ -98,7 +103,7 @@ router.post("/", async (req, res) => {
         .status(409)
         .send({ status: "error", message: "user already exists" });
     // setting a field to undefined makes the object not include the said field
-    const userToSend = { ...result, password: undefined };
+    const userToSend = createUserToSend(result);
     const accessToken = createJwt(userToSend.id, "access");
     const refreshToken = createJwt(userToSend.id, "refresh");
     res.cookie("jwt", refreshToken, {
@@ -158,7 +163,7 @@ router.post("/verify", async (req, res) => {
   // issuing a new access token
   const accessToken = createJwt(result.userId, "access");
   // setting a field to undefined makes it not being included in the response
-  const userToSend = { ...foundUser, password: undefined };
+  const userToSend = createUserToSend(foundUser);
   res.json({ status: "success", user: userToSend, accessToken });
 });
 
