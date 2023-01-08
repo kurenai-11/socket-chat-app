@@ -6,11 +6,19 @@ import { z } from "zod";
 import { signUpUser } from "../controllers/auth.controller.js";
 import { User } from "@prisma/client";
 
+const validUsernameRegex = /[a-zA-Z0-9-_]/g;
 // a schema for logging in with a login and a password
 const loginSchema = z
   .object({
     action: z.enum(["login", "signup"]),
-    login: z.string().min(4).max(20),
+    login: z
+      .string()
+      .min(4)
+      .max(20)
+      .refine(
+        (val) => val.match(validUsernameRegex)?.length === val.length,
+        "username must only contain lowercase, uppercase letters, numbers and -_"
+      ),
     password: z
       .string()
       .min(6)
