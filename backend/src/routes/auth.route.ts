@@ -150,7 +150,7 @@ router.post("/verify", async (req, res) => {
   if (!foundUser)
     return res.status(404).json({ status: "error", message: "user not found" });
   // if refreshToken is banned(user has logged out)
-  if (foundUser.refreshToken.includes(refreshToken)) {
+  if (foundUser.invalidRefreshTokens.includes(refreshToken)) {
     return res
       .status(403)
       .json({ status: "error", message: "refresh token is invalid" });
