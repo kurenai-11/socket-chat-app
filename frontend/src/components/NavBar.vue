@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { useUserStore } from "@/stores/user";
 import { RouterLink } from "vue-router";
 const navLinkClasses =
-  "h-full p-4 rounded-lg bg-zinc-7 decoration-none color-inherit font-bold transition-all hover:(text-zinc-1 bg-zinc-9)";
+  "h-full p-4 rounded-lg bg-zinc-7 border-none cursor-pointer decoration-none color-inherit font-bold transition-all hover:(text-zinc-1 bg-zinc-9)";
+const userStore = useUserStore();
+const logout = () => {
+  userStore.logout();
+};
 </script>
 <template>
   <header>
@@ -10,7 +15,13 @@ const navLinkClasses =
         <RouterLink :class="navLinkClasses" to="/">Home</RouterLink>
         <RouterLink :class="navLinkClasses" to="/about">About</RouterLink>
       </div>
-      <RouterLink :class="navLinkClasses" to="/auth">Login / Signup</RouterLink>
+      <RouterLink
+        v-if="!userStore.isLoggedIn"
+        :class="navLinkClasses"
+        to="/auth"
+        >Login / Signup</RouterLink
+      >
+      <button v-else @click="logout" :class="navLinkClasses">Logout</button>
     </nav>
   </header>
 </template>

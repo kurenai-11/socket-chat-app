@@ -15,5 +15,11 @@ export const useUserStore = defineStore("user", () => {
     delete authData.accessToken;
     user.value = authData.user;
   };
-  return { user, accessToken, isLoggedIn, storeUser };
+  const logout = () => {
+    user.value = null;
+    accessToken.value = null;
+    // todo: delete cookies and make a request to the server
+    // to blacklist the refresh token
+  };
+  return { user, accessToken, isLoggedIn, storeUser, logout };
 });
