@@ -15,11 +15,16 @@ type IoType = Server<ClientToServerEvents, ServerToClientEvents>;
 
 // when someone connects to the chat
 const onConnection = (socket: SocketType, io: IoType) => {
-  console.log(`A user ${socket.id} connected.`);
+  console.log("socket.data :>> ", socket.data);
+  const content =
+    socket.data.userId === null
+      ? "An anonymous user has joined the chat"
+      : `A user ${socket.data.displayName} has joined the chat`;
+  console.log(content);
   io.emit("user connected", {
     type: "serverMessage",
     id: nanoid(),
-    content: `A user ${socket.id} connected to the chat...`,
+    content,
     date: new Date().toISOString(),
   });
 };
@@ -62,9 +67,8 @@ const checkAuthMiddleware = (
   next: (err?: Error | undefined) => void
 ) => {
   const accessToken = z.string().safeParse(socket.handshake.auth.accessToken);
-  // if there is no access token
+  // if there is no access token - anonymous user by default
   if (!accessToken.success) {
-    // set the socket data to anonymous user
     socket.data.userId = null;
     socket.data.username = "anonymous";
     socket.data.displayName = "anonymous";
@@ -104,14 +108,21 @@ export const initializeSocket = (
       origin: FRONTEND_URL,
     },
   });
+  // checking the auth on connection(after login/signup)
+  io.use((socket, next) => checkAuthMiddleware(socket, next));
   io.on("connection", (socket) => {
-    onConnection(socket, io);
-    // middleware
+    // checking auth every time you use a socket
     socket.use((_, next) => checkAuthMiddleware(socket, next));
+    onConnection(socket, io);
     // socket event handlers
     socket.on("send message", (message) =>
       onSendMessage(io, socket.data, message)
     );
     socket.on("disconnect", () => onDisconnection(socket, io));
+    socket.on("error", (err) => {
+      console.log("oh shoot!");
+      console.log("err :>> ", err);
+      socket.disconnect();
+    });
   });
 };
