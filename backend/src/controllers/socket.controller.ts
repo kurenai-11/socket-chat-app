@@ -103,6 +103,7 @@ const checkAuthMiddleware = (
 export const initializeSocket = (
   server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
 ) => {
+  // todo: parse cookies(jwt refresh token)
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
     cors: {
       origin: FRONTEND_URL,
