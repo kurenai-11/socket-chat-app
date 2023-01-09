@@ -50,7 +50,7 @@ const onSendMessage = (
   });
 };
 
-// when someone disconencts from the chat
+// when someone disconnects from the chat
 const onDisconnection = (socket: SocketType, io: IoType) => {
   console.log(`A user ${socket.id} disconnected...`);
   io.emit("user disconnected", {
