@@ -16,7 +16,10 @@ const userStore = useUserStore();
 // creating a socket connection
 const rawSocket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   BACKEND_URL,
-  { autoConnect: false }
+  {
+    autoConnect: false,
+    auth: { accessToken: userStore.accessToken, userId: userStore.user?.id },
+  }
 );
 // for reactivity purposes
 const socket = ref(rawSocket);

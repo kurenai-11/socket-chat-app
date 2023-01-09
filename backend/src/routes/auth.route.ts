@@ -44,9 +44,16 @@ const authSchema = z
   })
   .strict();
 
-const createJwt = (userId: number, type: "access" | "refresh") => {
+type UserIdentity = {
+  userId: number;
+  username: string;
+  displayName: string;
+};
+
+const createJwt = (user: UserIdentity, type: "access" | "refresh") => {
+  const { userId, username, displayName } = user;
   return jwt.sign(
-    { userId },
+    { userId, username, displayName },
     type === "access"
       ? process.env.JWT_ACCESS_SECRET!
       : process.env.JWT_REFRESH_SECRET!,
@@ -90,8 +97,22 @@ router.post("/", async (req, res) => {
     if (passwordVerified) {
       // todo: create jwt here
       const userToSend = createUserToSend(foundUser);
-      const accessToken = createJwt(userToSend.id, "access");
-      const refreshToken = createJwt(userToSend.id, "refresh");
+      const accessToken = createJwt(
+        {
+          userId: userToSend.id,
+          username: foundUser.username,
+          displayName: foundUser.displayName,
+        },
+        "access"
+      );
+      const refreshToken = createJwt(
+        {
+          userId: userToSend.id,
+          username: foundUser.username,
+          displayName: foundUser.displayName,
+        },
+        "refresh"
+      );
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
         expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
@@ -112,8 +133,22 @@ router.post("/", async (req, res) => {
         .status(409)
         .send({ status: "error", message: "user already exists" });
     const userToSend = createUserToSend(result);
-    const accessToken = createJwt(userToSend.id, "access");
-    const refreshToken = createJwt(userToSend.id, "refresh");
+    const accessToken = createJwt(
+      {
+        userId: userToSend.id,
+        username: result.username,
+        displayName: result.displayName,
+      },
+      "access"
+    );
+    const refreshToken = createJwt(
+      {
+        userId: userToSend.id,
+        username: result.username,
+        displayName: result.displayName,
+      },
+      "refresh"
+    );
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
@@ -132,6 +167,7 @@ router.post("/verify", async (req, res) => {
       .json({ status: "error", message: "request is invalid" });
   }
   const { refreshToken } = authData.data;
+  // we don't need other properties than userId here
   let result: JwtPayload & { userId?: number };
   try {
     result = jwt.verify(
@@ -169,7 +205,14 @@ router.post("/verify", async (req, res) => {
       .json({ status: "error", message: "refresh token is invalid" });
   }
   // issuing a new access token
-  const accessToken = createJwt(result.userId, "access");
+  const accessToken = createJwt(
+    {
+      userId: foundUser.id,
+      username: foundUser.username,
+      displayName: foundUser.displayName,
+    },
+    "access"
+  );
   const userToSend = createUserToSend(foundUser);
   res.json({ status: "success", user: userToSend, accessToken });
 });

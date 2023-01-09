@@ -6,7 +6,9 @@ import {
   UserMessage,
 } from "../types.js";
 import http from "http";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { FRONTEND_URL } from "../app.js";
+import { z } from "zod";
 
 type SocketType = Socket<ClientToServerEvents, ServerToClientEvents>;
 type IoType = Server<ClientToServerEvents, ServerToClientEvents>;
@@ -23,7 +25,12 @@ const onConnection = (socket: SocketType, io: IoType) => {
 };
 
 // when someone sends a message to the chat
-const onSendMessage = (io: IoType, message: Partial<UserMessage>) => {
+// socket data is any for now, will fix later
+const onSendMessage = (
+  io: IoType,
+  socketData: any,
+  message: Partial<UserMessage>
+) => {
   console.log("message :>> ", message);
   if (message.content === undefined) {
     return;
@@ -34,7 +41,7 @@ const onSendMessage = (io: IoType, message: Partial<UserMessage>) => {
     id: nanoid(),
     content: message.content,
     date: new Date().toISOString(),
-    author: message.author || "anonymous",
+    author: socketData.displayName,
   });
 };
 
@@ -49,6 +56,44 @@ const onDisconnection = (socket: SocketType, io: IoType) => {
   });
 };
 
+// check authentication middleware
+const checkAuthMiddleware = (
+  socket: SocketType,
+  next: (err?: Error | undefined) => void
+) => {
+  const accessToken = z.string().safeParse(socket.handshake.auth.accessToken);
+  // if there is no access token
+  if (!accessToken.success) {
+    // set the socket data to anonymous user
+    socket.data.userId = null;
+    socket.data.username = "anonymous";
+    socket.data.displayName = "anonymous";
+    return next();
+  }
+  // verirying the access token
+  try {
+    const token: JwtPayload & {
+      userId?: number;
+      username?: string;
+      displayName?: string;
+    } = jwt.verify(
+      accessToken.data,
+      process.env.JWT_ACCESS_SECRET!
+    ) as JwtPayload;
+    // this shouldn't happen
+    if (!token.userId || !token.username || !token.displayName)
+      return next(new Error("Not authenticated"));
+    // set the socket data so we know who this socket is
+    socket.data.userId = token.userId;
+    socket.data.username = token.username;
+    socket.data.displayName = token.displayName;
+    next();
+  } catch (e) {
+    // it will only go here if the token was tampered with
+    return next(new Error("Not authenticated"));
+  }
+};
+
 // main socket logic will be here
 export const initializeSocket = (
   server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
@@ -60,7 +105,12 @@ export const initializeSocket = (
   });
   io.on("connection", (socket) => {
     onConnection(socket, io);
-    socket.on("send message", (message) => onSendMessage(io, message));
+    // middleware
+    socket.use((_, next) => checkAuthMiddleware(socket, next));
+    // socket event handlers
+    socket.on("send message", (message) =>
+      onSendMessage(io, socket.data, message)
+    );
     socket.on("disconnect", () => onDisconnection(socket, io));
   });
 };
