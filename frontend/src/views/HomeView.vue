@@ -18,7 +18,7 @@ const rawSocket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   BACKEND_URL,
   {
     autoConnect: false,
-    auth: { accessToken: userStore.accessToken, userId: userStore.user?.id },
+    auth: { accessToken: userStore.accessToken },
   }
 );
 // for reactivity purposes
@@ -54,6 +54,17 @@ const connect = () => {
 watch(isConnected, () => {
   console.log("socket :>> ", socket.value);
 });
+// watching if user logs out on the main page through the navbar
+watch(
+  () => userStore.isLoggedIn,
+  () => {
+    // only when the user logs out
+    if (!userStore.isLoggedIn) {
+      socket.value.auth = {};
+      socket.value.disconnect().connect();
+    }
+  }
+);
 // connecting on mount and setting up the events
 onMounted(() => {
   socket.value.connect();
