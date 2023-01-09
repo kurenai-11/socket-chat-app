@@ -63,6 +63,7 @@ const connect = () => {
 watch(isConnected, () => {
   console.log("socket :>> ", socket.value);
 });
+// focusing the message input when it is ready
 watchEffect(() => {
   if (!messageInput.value) return;
   messageInput.value.rawInput.focus();
