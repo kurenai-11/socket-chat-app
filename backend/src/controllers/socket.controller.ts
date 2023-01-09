@@ -109,7 +109,7 @@ export const initializeSocket = (
     },
   });
   // checking the auth on connection(after login/signup)
-  io.use((socket, next) => checkAuthMiddleware(socket, next));
+  io.use(checkAuthMiddleware);
   io.on("connection", (socket) => {
     // checking auth every time you use a socket
     socket.use((_, next) => checkAuthMiddleware(socket, next));
