@@ -13,6 +13,7 @@ import type {
   Message,
   ServerToClientEvents,
   ClientToServerEvents,
+  Nullable,
 } from "@/utils/types";
 import ChatMessage from "@/components/ChatMessage.vue";
 import FormInput from "@/components/FormInput.vue";
@@ -33,7 +34,7 @@ const rawSocket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
 const socket = ref(rawSocket);
 const isConnected = computed(() => socket.value.connected);
 
-const messageInput = ref<{ rawInput: HTMLInputElement } | null>();
+const messageInput = ref<Nullable<{ rawInput: HTMLInputElement }>>();
 const messages = ref<Message[]>([]);
 const currentMessage = ref("");
 const addReceivedMessage = (message: Message) => {
