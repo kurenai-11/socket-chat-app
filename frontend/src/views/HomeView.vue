@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from "vue";
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  onUpdated,
+  ref,
+  watch,
+  watchEffect,
+} from "vue";
 import io, { Socket } from "socket.io-client";
 import type {
   Message,
@@ -25,6 +33,7 @@ const rawSocket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
 const socket = ref(rawSocket);
 const isConnected = computed(() => socket.value.connected);
 
+const messageInput = ref<{ rawInput: HTMLInputElement } | null>();
 const messages = ref<Message[]>([]);
 const currentMessage = ref("");
 const addReceivedMessage = (message: Message) => {
@@ -53,6 +62,10 @@ const connect = () => {
 // watching connection state
 watch(isConnected, () => {
   console.log("socket :>> ", socket.value);
+});
+watchEffect(() => {
+  if (!messageInput.value) return;
+  messageInput.value.rawInput.focus();
 });
 // watching if user logs out on the main page through the navbar
 watch(
@@ -123,6 +136,7 @@ onUnmounted(() => {
           placeholder="Your message..."
           additional-classes="sm:(min-w-120)"
           v-model="currentMessage"
+          ref="messageInput"
         />
         <NButton
           type="submit"

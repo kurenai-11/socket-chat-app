@@ -1,7 +1,8 @@
 <!-- This is a generic FormInput element -->
 <script setup lang="ts">
+import type { Nullable } from "@/utils/types";
 import { twMerge as tw } from "tailwind-merge";
-import type { InputHTMLAttributes } from "vue";
+import { ref, type InputHTMLAttributes } from "vue";
 
 export interface CustomInputProps extends InputHTMLAttributes {
   additionalClasses?: string;
@@ -13,6 +14,8 @@ const baseClasses =
 
 defineProps<CustomInputProps>();
 defineEmits<{ (e: "update:modelValue", val: string): void }>();
+const inputRef = ref<Nullable<HTMLInputElement>>(null);
+defineExpose({ rawInput: inputRef });
 </script>
 <template>
   <input
@@ -24,5 +27,6 @@ defineEmits<{ (e: "update:modelValue", val: string): void }>();
     @input="
       $emit('update:modelValue', ($event.target as HTMLInputElement).value)
     "
+    ref="inputRef"
   />
 </template>
