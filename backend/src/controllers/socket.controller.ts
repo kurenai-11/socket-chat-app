@@ -52,11 +52,15 @@ const onSendMessage = (
 
 // when someone disconnects from the chat
 const onDisconnection = (socket: SocketType, io: IoType) => {
-  console.log(`A user ${socket.id} disconnected...`);
+  const content =
+    socket.data.userId === null
+      ? "An anonymous user has disconnect from the chat"
+      : `A user ${socket.data.displayName} has disconnected from the chat`;
+  console.log(content);
   io.emit("user disconnected", {
     type: "serverMessage",
     id: nanoid(),
-    content: `A user ${socket.id} disconnected from the chat...`,
+    content,
     date: new Date().toISOString(),
   });
 };
