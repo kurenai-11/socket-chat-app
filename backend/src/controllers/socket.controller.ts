@@ -30,7 +30,7 @@ const onConnection = (socket: SocketType, io: IoType) => {
 };
 
 // when someone sends a message to the chat
-// socket data is any for now, will fix later
+// todo: socket data is any for now, will fix later
 const onSendMessage = (
   io: IoType,
   socketData: any,
