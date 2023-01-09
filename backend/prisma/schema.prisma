@@ -28,7 +28,7 @@ model User {
   username             String    @unique
   displayName          String?
   banned               Boolean   @default(false)
-  bannedUntil          DateTime  @default(now())
+  bannedUntil          DateTime?
   password             String
   invalidRefreshTokens String[] // this is a list of invalid refreshTokens (if a user has logged out etc.)
   messages             Message[]
