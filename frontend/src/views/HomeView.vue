@@ -80,7 +80,7 @@ onUnmounted(() => {
 <template>
   <main class="flex flex-col gap-2 items-center mx-4" v-auto-animate>
     <h1 class="text-xl font-bold">This is the main page.</h1>
-    <p class="text-center">
+    <p class="text-center mb-1">
       Currently you are {{ isConnected ? "connected" : "disconnected" }}
       {{ isConnected ? "to" : "from" }} the chat as
       <span class="font-bold text-red-6">{{
@@ -88,7 +88,10 @@ onUnmounted(() => {
       }}</span
       >.
     </p>
-    <p class="text-center my-2" v-if="!userStore.isLoggedIn">
+    <p
+      class="text-zinc-4 text-center mt-1 mb-2"
+      v-if="!userStore.isLoggedIn && isConnected"
+    >
       You can't send messages when you are not logged in. However, you can go
       and take a look at the conversation.
     </p>
