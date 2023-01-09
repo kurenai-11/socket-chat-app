@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { BACKEND_URL } from "@/main";
+import { useUserStore } from "@/stores/user";
+import type { User } from "@/utils/types";
 import { ref } from "vue";
 import FormInput from "./FormInput.vue";
 import NButton from "./NButton.vue";
@@ -33,8 +35,15 @@ const submitHandler = async (action: "login" | "signup") => {
       password: password.value,
     }),
   });
-  const authData = await res.json();
+  if (res.status !== 200) {
+    console.log("login error: " + res.status);
+    return;
+  }
+  const authData: { accessToken: string; status: "success"; user: User } =
+    await res.json();
+  const store = useUserStore();
   console.log("authData :>> ", authData);
+  store.storeUser(authData);
 };
 </script>
 <template>

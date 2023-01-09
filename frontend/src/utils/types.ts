@@ -25,3 +25,20 @@ export interface ServerToClientEvents {
 export interface ClientToServerEvents {
   "send message": (message: Partial<UserMessage>) => void;
 }
+
+// utility types
+// object nullable
+export type ONullable<T extends object> = { [K in keyof T]: T[K] | null };
+// primitive nullable
+export type Nullable<T> = T | null;
+
+// application types
+export interface User {
+  banned: boolean;
+  bannedUntil: Nullable<string>;
+  id: number;
+  username: string;
+  createdAt: string;
+  displayName: Nullable<string>;
+  role: "User" | "Moderator" | "Admin";
+}
