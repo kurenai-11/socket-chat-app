@@ -91,13 +91,6 @@ onUnmounted(() => {
       }}</span
       >.
     </p>
-    <p
-      class="text-zinc-4 text-center mt-1 mb-2"
-      v-if="!userStore.isLoggedIn && isConnected"
-    >
-      You can't send messages when you are not logged in. However, you can go
-      and take a look at the conversation.
-    </p>
     <NButton
       v-if="!isConnected"
       @click="connect"
