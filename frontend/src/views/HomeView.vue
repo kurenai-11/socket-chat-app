@@ -61,7 +61,8 @@ watch(
     // only when the user logs out
     if (!userStore.isLoggedIn) {
       socket.value.auth = {};
-      socket.value.disconnect().connect();
+      disconnect();
+      connect();
     }
   }
 );
