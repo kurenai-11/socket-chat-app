@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BACKEND_URL } from "@/main";
+import { BACKEND_URL } from "@/utils/constants";
 import { useUserStore } from "@/stores/user";
 import type { User } from "@/utils/types";
 import { ref } from "vue";

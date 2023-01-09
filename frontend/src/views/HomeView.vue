@@ -5,11 +5,11 @@ import type {
   Message,
   ServerToClientEvents,
   ClientToServerEvents,
-} from "../utils/types";
+} from "@/utils/types";
 import ChatMessage from "@/components/ChatMessage.vue";
 import FormInput from "@/components/FormInput.vue";
 import NButton from "@/components/NButton.vue";
-import { BACKEND_URL } from "@/main";
+import { BACKEND_URL } from "@/utils/constants";
 import { useUserStore } from "@/stores/user";
 
 const userStore = useUserStore();
@@ -88,7 +88,6 @@ onUnmounted(() => {
       }}</span
       >.
     </p>
-    <!-- to implement ↓ -->
     <p class="text-center my-2" v-if="!userStore.isLoggedIn">
       You can't send messages when you are not logged in. However, you can go
       and take a look at the conversation.
