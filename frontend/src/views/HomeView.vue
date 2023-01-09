@@ -10,7 +10,9 @@ import ChatMessage from "@/components/ChatMessage.vue";
 import FormInput from "@/components/FormInput.vue";
 import NButton from "@/components/NButton.vue";
 import { BACKEND_URL } from "@/main";
+import { useUserStore } from "@/stores/user";
 
+const userStore = useUserStore();
 // creating a socket connection
 const rawSocket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
   BACKEND_URL,
@@ -76,11 +78,20 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <main class="flex flex-col gap-2 items-center" v-auto-animate>
+  <main class="flex flex-col gap-2 items-center mx-4" v-auto-animate>
     <h1 class="text-xl font-bold">This is the main page.</h1>
-    <p>
+    <p class="text-center">
       Currently you are {{ isConnected ? "connected" : "disconnected" }}
-      {{ isConnected ? "to" : "from" }} the chat.
+      {{ isConnected ? "to" : "from" }} the chat as
+      <span class="font-bold text-red-6">{{
+        userStore.isLoggedIn ? userStore.user?.username : "Anonymous user"
+      }}</span
+      >.
+    </p>
+    <!-- to implement ↓ -->
+    <p class="text-center my-2" v-if="!userStore.isLoggedIn">
+      You can't send messages when you are not logged in. However, you can go
+      and take a look at the conversation.
     </p>
     <NButton
       v-if="!isConnected"

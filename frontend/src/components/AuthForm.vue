@@ -41,9 +41,9 @@ const submitHandler = async (action: "login" | "signup") => {
   }
   const authData: { accessToken: string; status: "success"; user: User } =
     await res.json();
-  const store = useUserStore();
+  const userStore = useUserStore();
   console.log("authData :>> ", authData);
-  store.storeUser(authData);
+  userStore.storeUser(authData);
 };
 </script>
 <template>
