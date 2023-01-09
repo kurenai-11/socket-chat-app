@@ -71,6 +71,7 @@ const checkAuthMiddleware = (
     return next();
   }
   // verirying the access token
+  // todo: get the new access token from the refresh token if it is expired
   try {
     const token: JwtPayload & {
       userId?: number;
