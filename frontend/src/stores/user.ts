@@ -17,8 +17,6 @@ export const useUserStore = defineStore("user", () => {
     user.value = authData.user;
   };
   const logout = async () => {
-    // user.value = null;
-    // accessToken.value = null;
     const response = await fetch(`${BACKEND_URL}/auth/logout`, {
       method: "POST",
       mode: "cors",
@@ -27,9 +25,9 @@ export const useUserStore = defineStore("user", () => {
       // fetch doesn't send a post request if there is no body
       body: "",
     });
+    user.value = null;
+    accessToken.value = null;
     console.log("response :>> ", response);
-    // todo: delete cookies and make a request to the server
-    // to blacklist the refresh token
   };
   return { user, accessToken, isLoggedIn, storeUser, logout };
 });

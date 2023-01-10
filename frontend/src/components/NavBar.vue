@@ -4,9 +4,6 @@ import { RouterLink } from "vue-router";
 const navLinkClasses =
   "h-full p-4 rounded-lg bg-zinc-7 border-none cursor-pointer decoration-none color-inherit font-bold transition-all hover:(text-zinc-1 bg-zinc-9)";
 const userStore = useUserStore();
-const logout = () => {
-  userStore.logout();
-};
 </script>
 <template>
   <header>
@@ -21,7 +18,9 @@ const logout = () => {
         to="/auth"
         >Login / Signup</RouterLink
       >
-      <button v-else @click="logout" :class="navLinkClasses">Logout</button>
+      <button v-else @click="userStore.logout" :class="navLinkClasses">
+        Logout
+      </button>
     </nav>
   </header>
 </template>

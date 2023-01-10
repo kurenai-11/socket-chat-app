@@ -5,6 +5,7 @@ import { prisma } from "../app.js";
 import { z } from "zod";
 import {
   checkJwtMiddleware,
+  jwtTokenPayload,
   signUpUser,
 } from "../controllers/auth.controller.js";
 import { User } from "@prisma/client";
@@ -146,12 +147,33 @@ router.post("/", async (req, res) => {
 
 // logout route
 // /auth/logout
-router.post("/logout", checkJwtMiddleware, (req, res) => {
+router.post("/logout", checkJwtMiddleware, async (req, res) => {
   // we are sure that about the identity of the user because of the middleware now
-  console.log(req.cookies.jwt);
-  res.send("ok");
   // clear the refresh token
-  // res.clearCookie("jwt");
+  const refreshToken = req.cookies.jwt;
+  // this is for the strange, rare case where the user has deleted
+  // the refresh token by themselves for some reason
+  // while still having a valid access token in the memory
+  if (!refreshToken) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  // we already verified the access token and appended it as a "user" header
+  // in the checkJwtMiddleware function
+  const userData: jwtTokenPayload = JSON.parse(req.headers.user! as string);
+  const foundUser = await prisma.user.findUnique({
+    where: { id: userData.userId },
+  });
+  // if the user was deleted entirely already...
+  if (!foundUser) {
+    return res.status(400).json({ message: "User does not exist" });
+  }
+  // invalidating the refresh token
+  await prisma.user.update({
+    where: { id: userData.userId },
+    data: { invalidRefreshTokens: { push: refreshToken } },
+  });
+  res.clearCookie("jwt");
+  res.send("ok");
 });
 
 export default router;

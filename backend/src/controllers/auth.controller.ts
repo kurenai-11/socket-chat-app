@@ -101,8 +101,10 @@ export const checkJwtMiddleware = (
   }
   // actually verifying the token
   try {
-    const result = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
-    console.log("result :>> ", result);
+    const user = jwt.verify(token, process.env.JWT_ACCESS_SECRET!);
+    // attach the user with the user data to the custom header
+    // so we can use it later if we need to
+    req.headers["user"] = JSON.stringify(user);
     return next();
   } catch (e) {
     if (e instanceof jwt.TokenExpiredError) {
