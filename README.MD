@@ -1,6 +1,6 @@
 ## A fullstack chat project
 
-Basically what the title says.
+Basically what the title says. Uses NodeJS/Express/Socket.IO for backend, Vue+TailwindCSS+Socket.io for the frontend.
 
 ## Development setup
 
