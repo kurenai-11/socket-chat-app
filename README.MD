@@ -1,4 +1,4 @@
-## A simple fullstack chat project
+## A fullstack chat project
 
 Basically what the title says.
 
