@@ -46,7 +46,7 @@ export const signUpUser = async (
   }
 };
 
-// this will handle the validation of the refresh token also
+// this will also handle the validation of the refresh token
 const getNewAccessToken = async (refreshToken: string) => {
   try {
     const result: jwtTokenPayload = jwt.verify(
@@ -85,6 +85,8 @@ export const checkJwtMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
+  // the user should send the authorization header
+  // with the access token in all cases
   if (!req.headers.authorization) {
     return res.status(401).json({ error: "Unauthorized" });
   }
