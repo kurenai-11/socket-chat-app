@@ -24,7 +24,7 @@ type IoType = Server<
   SocketData
 >;
 type SocketData = {
-  userId: number;
+  userId?: number;
   displayName?: string;
   username?: string;
 };
