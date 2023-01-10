@@ -5,7 +5,6 @@ import { prisma } from "../app.js";
 import { z } from "zod";
 import {
   checkJwtMiddleware,
-  jwtTokenPayload,
   signUpUser,
 } from "../controllers/auth.controller.js";
 import { User } from "@prisma/client";
