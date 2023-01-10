@@ -17,7 +17,7 @@ export const useUserStore = defineStore("user", () => {
     user.value = authData.user;
   };
   const logout = async () => {
-    const response = await fetch(`${BACKEND_URL}/auth/logout`, {
+    await fetch(`${BACKEND_URL}/auth/logout`, {
       method: "POST",
       mode: "cors",
       credentials: "include",
@@ -27,7 +27,19 @@ export const useUserStore = defineStore("user", () => {
     });
     user.value = null;
     accessToken.value = null;
-    console.log("response :>> ", response);
   };
-  return { user, accessToken, isLoggedIn, storeUser, logout };
+  const persistAuth = async () => {
+    const response = await fetch(`${BACKEND_URL}/auth/verify`, {
+      method: "GET",
+      mode: "cors",
+      credentials: "include",
+    });
+    if (!response.ok) return;
+    const authData = (await response.json()) as {
+      user: User;
+      accessToken?: string;
+    };
+    storeUser(authData);
+  };
+  return { user, accessToken, isLoggedIn, storeUser, logout, persistAuth };
 });

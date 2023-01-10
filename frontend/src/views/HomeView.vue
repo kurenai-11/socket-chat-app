@@ -60,10 +60,6 @@ const connect = () => {
   !isConnected.value && socket.value.connect();
 };
 
-// watching connection state
-watch(isConnected, () => {
-  console.log("socket :>> ", socket.value);
-});
 // focusing the message input when it is ready
 watchEffect(() => {
   if (!messageInput.value) return;
@@ -82,7 +78,13 @@ watch(
   }
 );
 // connecting on mount and setting up the events
-onMounted(() => {
+onMounted(async () => {
+  await userStore.persistAuth();
+  // after the await, the store data is fully updated
+  // if auth persisted, set the socket auth data to the newly acquired access token
+  if (userStore.accessToken) {
+    socket.value.auth = { accessToken: userStore.accessToken };
+  }
   socket.value.connect();
   const addMessageEvents = [
     "user connected",

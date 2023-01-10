@@ -20,7 +20,6 @@ const switchFormsHandler = () => {
   isLoginForm.value = !isLoginForm.value;
 };
 const submitHandler = async (action: "login" | "signup") => {
-  console.log(`submit ${action}`);
   if (!login.value || !password.value) return;
   const res = await fetch(`${BACKEND_URL}/auth`, {
     method: "POST",
@@ -42,7 +41,6 @@ const submitHandler = async (action: "login" | "signup") => {
   const authData: { accessToken: string; status: "success"; user: User } =
     await res.json();
   const userStore = useUserStore();
-  console.log("authData :>> ", authData);
   userStore.storeUser(authData);
 };
 </script>

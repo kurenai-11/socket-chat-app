@@ -31,12 +31,10 @@ type SocketData = {
 
 // when someone connects to the chat
 const onConnection = (socket: SocketType, io: IoType) => {
-  console.log("socket.data :>> ", socket.data);
   const content =
     socket.data.userId === undefined
       ? "An anonymous user has joined the chat"
       : `A user ${socket.data.displayName} has joined the chat`;
-  console.log(content);
   io.emit("user connected", {
     type: "serverMessage",
     id: nanoid(),
@@ -52,7 +50,6 @@ const onSendMessage = (
   socketData: any,
   message: Partial<UserMessage>
 ) => {
-  console.log("message :>> ", message);
   if (message.content === undefined) {
     return;
   }
@@ -72,7 +69,6 @@ const onDisconnection = (socket: SocketType, io: IoType) => {
     socket.data.userId === null
       ? "An anonymous user has disconnect from the chat"
       : `A user ${socket.data.displayName} has disconnected from the chat`;
-  console.log(content);
   io.emit("user disconnected", {
     type: "serverMessage",
     id: nanoid(),

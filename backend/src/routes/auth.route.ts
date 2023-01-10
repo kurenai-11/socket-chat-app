@@ -175,4 +175,22 @@ router.post("/logout", checkJwtMiddleware, async (req, res) => {
   res.send("ok");
 });
 
+// route to verify the user to persist the auth upon page refresh
+router.get("/verify", checkJwtMiddleware, async (req, res) => {
+  // middleware did all the verification and
+  // provided us with a header including a new access token
+  const accessToken = req.headers["authorization"]?.split(" ")[1]!;
+  const userIdentity: jwtTokenPayload = JSON.parse(
+    req.headers["user"] as string
+  );
+  const foundUser = await prisma.user.findUnique({
+    where: { id: userIdentity.userId },
+  });
+  if (!foundUser) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const userToSend = createUserToSend(foundUser);
+  res.json({ user: userToSend, accessToken });
+});
+
 export default router;

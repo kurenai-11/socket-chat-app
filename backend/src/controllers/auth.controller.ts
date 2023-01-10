@@ -80,16 +80,26 @@ const getNewAccessToken = async (refreshToken: string) => {
 };
 
 // this is for checking both the access token and the refresh token
-export const checkJwtMiddleware = (
+export const checkJwtMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  // the user should send the authorization header
-  // with the access token in all cases
+  // if there is no authorization header
+  // (for example when we do the request to persist the auth)
+  // we will check the refresh token and create a new access token
   if (!req.headers.authorization) {
-    return res.status(401).json({ error: "Unauthorized" });
+    // validation will happen in the function below
+    const newAccessToken = await getNewAccessToken(req.cookies.jwt);
+    if (newAccessToken) {
+      req.headers.authorization = `Bearer ${newAccessToken}`;
+      // creating user identity header
+      req.headers["user"] = JSON.stringify(jwt.decode(newAccessToken));
+      return next();
+    }
+    return res.status(401).json({ message: "Unauthorized" });
   }
+  // if there is a header with an access token, check it
   const parts = req.headers.authorization.split(" ");
   if (parts.length !== 2) {
     return res.status(401).json({ message: "Invalid Authorization header" });
