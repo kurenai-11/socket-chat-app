@@ -11,14 +11,29 @@ import { FRONTEND_URL } from "../app.js";
 import { z } from "zod";
 import { jwtTokenPayload } from "./auth.controller.js";
 
-type SocketType = Socket<ClientToServerEvents, ServerToClientEvents>;
-type IoType = Server<ClientToServerEvents, ServerToClientEvents>;
+type SocketType = Socket<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  {},
+  SocketData
+>;
+type IoType = Server<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  {},
+  SocketData
+>;
+type SocketData = {
+  userId: number;
+  displayName?: string;
+  username?: string;
+};
 
 // when someone connects to the chat
 const onConnection = (socket: SocketType, io: IoType) => {
   console.log("socket.data :>> ", socket.data);
   const content =
-    socket.data.userId === null
+    socket.data.userId === undefined
       ? "An anonymous user has joined the chat"
       : `A user ${socket.data.displayName} has joined the chat`;
   console.log(content);
@@ -74,7 +89,7 @@ const checkAuthMiddleware = (
   const accessToken = z.string().safeParse(socket.handshake.auth.accessToken);
   // if there is no access token - anonymous user by default
   if (!accessToken.success) {
-    socket.data.userId = null;
+    socket.data.userId = undefined;
     socket.data.username = "anonymous";
     socket.data.displayName = "anonymous";
     return next();
@@ -102,7 +117,12 @@ const checkAuthMiddleware = (
 export const initializeSocket = (
   server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
 ) => {
-  const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
+  const io = new Server<
+    ClientToServerEvents,
+    ServerToClientEvents,
+    any,
+    SocketData
+  >(server, {
     cors: {
       origin: FRONTEND_URL,
     },
