@@ -23,6 +23,7 @@ export const useUserStore = defineStore("user", () => {
       method: "POST",
       mode: "cors",
       credentials: "include",
+      headers: { Authorization: "Bearer " + accessToken.value },
       // fetch doesn't send a post request if there is no body
       body: "",
     });

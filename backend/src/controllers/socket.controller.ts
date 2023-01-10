@@ -9,6 +9,7 @@ import http from "http";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { FRONTEND_URL } from "../app.js";
 import { z } from "zod";
+import { jwtTokenPayload } from "./auth.controller.js";
 
 type SocketType = Socket<ClientToServerEvents, ServerToClientEvents>;
 type IoType = Server<ClientToServerEvents, ServerToClientEvents>;
@@ -81,11 +82,7 @@ const checkAuthMiddleware = (
   // verirying the access token
   // todo: get the new access token from the refresh token if it is expired
   try {
-    const token: JwtPayload & {
-      userId?: number;
-      username?: string;
-      displayName?: string;
-    } = jwt.verify(
+    const token: jwtTokenPayload = jwt.verify(
       accessToken.data,
       process.env.JWT_ACCESS_SECRET!
     ) as JwtPayload;

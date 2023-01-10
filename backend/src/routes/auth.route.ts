@@ -3,8 +3,13 @@ import bcrypt from "bcrypt";
 import jwt, { type JwtPayload } from "jsonwebtoken";
 import { prisma } from "../app.js";
 import { z } from "zod";
-import { signUpUser } from "../controllers/auth.controller.js";
+import {
+  checkJwtMiddleware,
+  jwtTokenPayload,
+  signUpUser,
+} from "../controllers/auth.controller.js";
 import { User } from "@prisma/client";
+import { createJwt } from "../controllers/auth.controller.js";
 
 const validUsernameRegex = /[a-zA-Z0-9\-_]/g;
 // a schema for logging in with a login and a password
@@ -43,25 +48,6 @@ const authSchema = z
     refreshToken: z.string(),
   })
   .strict();
-
-type UserIdentity = {
-  userId: number;
-  username: string;
-  displayName: string;
-};
-
-const createJwt = (user: UserIdentity, type: "access" | "refresh") => {
-  const { userId, username, displayName } = user;
-  return jwt.sign(
-    { userId, username, displayName },
-    type === "access"
-      ? process.env.JWT_ACCESS_SECRET!
-      : process.env.JWT_REFRESH_SECRET!,
-    {
-      expiresIn: type === "access" ? "5m" : "3d",
-    }
-  );
-};
 
 // a place to remove unwanted fields from the data we will send to the client
 // setting a field to undefined makes it so the field
@@ -170,7 +156,7 @@ router.post("/verify", async (req, res) => {
   }
   const { refreshToken } = authData.data;
   // we don't need other properties than userId here
-  let result: JwtPayload & { userId?: number };
+  let result: jwtTokenPayload;
   try {
     result = jwt.verify(
       refreshToken,
@@ -221,7 +207,8 @@ router.post("/verify", async (req, res) => {
 
 // logout route
 // /auth/logout
-router.post("/logout", (req, res) => {
+router.post("/logout", checkJwtMiddleware, (req, res) => {
+  // we are sure that about the identity of the user because of the middleware now
   console.log(req.cookies.jwt);
   res.send("ok");
   // clear the refresh token
