@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import authRouter from "./routes/auth.route.js";
 import { initializeSocket } from "./controllers/socket.controller.js";
+import cookieParser from "cookie-parser";
 
 // load dotenv
 dotenv.config();
@@ -18,6 +19,7 @@ export const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
 app.use(cors({ origin: FRONTEND_URL, credentials: true }));
+app.use(cookieParser());
 // creating socket server
 const server = http.createServer(app);
 initializeSocket(server);

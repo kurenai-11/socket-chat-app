@@ -1,6 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import type { Nullable, User } from "@/utils/types";
+import { BACKEND_URL } from "@/utils/constants";
 
 export const useUserStore = defineStore("user", () => {
   const user = ref<Nullable<User>>(null);
@@ -15,9 +16,17 @@ export const useUserStore = defineStore("user", () => {
     delete authData.accessToken;
     user.value = authData.user;
   };
-  const logout = () => {
-    user.value = null;
-    accessToken.value = null;
+  const logout = async () => {
+    // user.value = null;
+    // accessToken.value = null;
+    const response = await fetch(`${BACKEND_URL}/auth/logout`, {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      // fetch doesn't send a post request if there is no body
+      body: "",
+    });
+    console.log("response :>> ", response);
     // todo: delete cookies and make a request to the server
     // to blacklist the refresh token
   };

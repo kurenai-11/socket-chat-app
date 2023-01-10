@@ -118,6 +118,7 @@ onUnmounted(() => {
       }}</span
       >.
     </p>
+    <NButton @click="userStore.logout">Cookies</NButton>
     <NButton
       v-if="!isConnected"
       @click="connect"

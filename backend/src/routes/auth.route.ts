@@ -116,6 +116,7 @@ router.post("/", async (req, res) => {
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
         expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
+        sameSite: false,
       });
       return res
         .status(200)
@@ -152,6 +153,7 @@ router.post("/", async (req, res) => {
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
+      sameSite: false,
     });
     return res.json({ status: "success", user: userToSend, accessToken });
   }
@@ -215,6 +217,15 @@ router.post("/verify", async (req, res) => {
   );
   const userToSend = createUserToSend(foundUser);
   res.json({ status: "success", user: userToSend, accessToken });
+});
+
+// logout route
+// /auth/logout
+router.post("/logout", (req, res) => {
+  console.log(req.cookies.jwt);
+  res.send("ok");
+  // clear the refresh token
+  // res.clearCookie("jwt");
 });
 
 export default router;
