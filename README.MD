@@ -5,7 +5,7 @@ Basically what the title says. Uses NodeJS/Express/Socket.IO for the backend, Vu
 ## Features and security decisions explanation
 1. Real time communication - using Socket.io (websocket).
 2. Jwt login/password authentication. Server responds with an access key that is valid only 30 seconds. Access key is only needed to initially connect to the chat(Socket) so it has a short life span.
-3. We are persisting the auth on page refresh by requesting a new JWT Access key every refresh. Access key is being requested from the server using a http-only cookie only containing the JWT Refresh key, which is securely saved in the browser(NOT in the local storage) unable to be accessed by javascript(to prevent XSS and CSRF).
+3. We are persisting the auth on page refresh by requesting a new JWT Access key every refresh. Access key is being requested from the server using a http-only cookie with the JWT Refresh key, which is securely saved in the browser(NOT in the local storage), unable to be accessed by javascript(to prevent XSS and CSRF).
 
 ## Development setup
 
