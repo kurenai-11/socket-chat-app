@@ -145,66 +145,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// a route to verify a refresh token and issue a new access token
-// /auth/verify
-router.post("/verify", async (req, res) => {
-  const authData = authSchema.safeParse(req.body);
-  if (!authData.success) {
-    return res
-      .status(400)
-      .json({ status: "error", message: "request is invalid" });
-  }
-  const { refreshToken } = authData.data;
-  // we don't need other properties than userId here
-  let result: jwtTokenPayload;
-  try {
-    result = jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_SECRET!
-    ) as JwtPayload;
-  } catch (e) {
-    if (e instanceof jwt.JsonWebTokenError) {
-      return res
-        .status(403)
-        .json({ status: "error", message: "refresh token is invalid" });
-    }
-    console.error(e);
-    return res
-      .status(500)
-      .json({ status: "error", message: "server side error" });
-  }
-  // jwt issue validity is verified
-  // for the rare case where there is no user id specified in the token
-  // (invalid sign)
-  if (!result.userId)
-    return res
-      .status(401)
-      .json({ status: "error", message: "refresh token is invalid" });
-  // now we know that the refresh token is fully valid
-  const foundUser = await prisma.user.findUnique({
-    where: { id: result.userId },
-  });
-  if (!foundUser)
-    return res.status(404).json({ status: "error", message: "user not found" });
-  // if refreshToken is banned(user has logged out)
-  if (foundUser.invalidRefreshTokens.includes(refreshToken)) {
-    return res
-      .status(403)
-      .json({ status: "error", message: "refresh token is invalid" });
-  }
-  // issuing a new access token
-  const accessToken = createJwt(
-    {
-      userId: foundUser.id,
-      username: foundUser.username,
-      displayName: foundUser.displayName,
-    },
-    "access"
-  );
-  const userToSend = createUserToSend(foundUser);
-  res.json({ status: "success", user: userToSend, accessToken });
-});
-
 // logout route
 // /auth/logout
 router.post("/logout", checkJwtMiddleware, (req, res) => {
