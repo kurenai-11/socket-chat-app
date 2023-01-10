@@ -1,6 +1,6 @@
 ## A fullstack chat project
 
-Basically what the title says. Uses NodeJS/Express/Socket.IO for the backend, Vue+UnoCSS+Socket.io for the frontend.
+Basically what the title says. Uses NodeJS/Express/Socket.IO for the backend, Vue+UnoCSS+Socket.io for the frontend. Written fully in Typescript of course.
 
 ## Features and security decisions explanation
 1. Real time communication - using Socket.io (websocket).
