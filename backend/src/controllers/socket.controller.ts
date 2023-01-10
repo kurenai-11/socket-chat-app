@@ -25,8 +25,8 @@ type IoType = Server<
 >;
 type SocketData = {
   userId?: number;
-  displayName?: string;
-  username?: string;
+  displayName: string;
+  username: string;
 };
 
 // when someone connects to the chat
