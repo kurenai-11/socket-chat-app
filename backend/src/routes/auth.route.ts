@@ -81,7 +81,6 @@ router.post("/", async (req, res) => {
       });
     const passwordVerified = await bcrypt.compare(password, foundUser.password);
     if (passwordVerified) {
-      // todo: create jwt here
       const userToSend = createUserToSend(foundUser);
       const accessToken = createJwt(
         {
