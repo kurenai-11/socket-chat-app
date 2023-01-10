@@ -79,8 +79,6 @@ const checkAuthMiddleware = (
     socket.data.displayName = "anonymous";
     return next();
   }
-  // verirying the access token
-  // todo: get the new access token from the refresh token if it is expired
   try {
     const token: jwtTokenPayload = jwt.verify(
       accessToken.data,
@@ -104,7 +102,6 @@ const checkAuthMiddleware = (
 export const initializeSocket = (
   server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
 ) => {
-  // todo: parse cookies(jwt refresh token)
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
     cors: {
       origin: FRONTEND_URL,
@@ -113,8 +110,6 @@ export const initializeSocket = (
   // checking the auth on connection(after login/signup)
   io.use(checkAuthMiddleware);
   io.on("connection", (socket) => {
-    // checking auth every time you use a socket
-    socket.use((_, next) => checkAuthMiddleware(socket, next));
     onConnection(socket, io);
     // socket event handlers
     socket.on("send message", (message) =>
